@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:autogas/src/presentation/widgets/widgets.dart';
 
 class RegisterContent extends StatelessWidget {
   const RegisterContent({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       // backgroundColor: Colors.white,
@@ -29,111 +31,204 @@ class RegisterContent extends StatelessWidget {
                 // key: _formkey,
                 child: Column(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 30.0,
+                    CustomTextFormField(
+                      label: 'Nombre',
+                      hint: 'Ingresar Nombres',
+                      prefixIcon: Icon(
+                        Icons.supervised_user_circle_outlined,
+                        color: colors.primary,
                       ),
-                      decoration: BoxDecoration(
+                      keyboardType: TextInputType.text,
+                      backgroundColor:
+                          isDark
+                              ? const Color(0xFF1E1E1E)
+                              : const Color(0xFFedf0f8),
+                      textColor: isDark ? Colors.grey[300] : Colors.black87,
+                      hintStyle: TextStyle(
                         color:
-                            isDark
-                                ? const Color(0xFF1E1E1E)
-                                : const Color(0xFFedf0f8),
-                        borderRadius: BorderRadius.circular(30),
+                            isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
+                        fontSize: 18.0,
                       ),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please Enter Name';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Name",
-                          hintStyle: TextStyle(
-                            color:
-                                isDark
-                                    ? Colors.grey[400]
-                                    : const Color(0xFFb2b7bf),
-                            fontSize: 18.0,
-                          ),
-                        ),
+                      floatingLabelStyle: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingrese el Nombre';
+                        }
+                        return null;
+                      },
                     ),
 
-                    const SizedBox(height: 30.0),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 30.0,
+                    const SizedBox(height: 20),
+                    CustomTextFormField(
+                      label: 'Apellido',
+                      hint: 'Ingresar Apellido',
+                      prefixIcon: Icon(
+                        Icons.supervised_user_circle_outlined,
+                        color: colors.primary,
                       ),
-                      decoration: BoxDecoration(
+                      keyboardType: TextInputType.text,
+                      backgroundColor:
+                          isDark
+                              ? const Color(0xFF1E1E1E)
+                              : const Color(0xFFedf0f8),
+                      textColor: isDark ? Colors.grey[300] : Colors.black87,
+                      hintStyle: TextStyle(
                         color:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? const Color(
-                                  0xFF1E1E1E,
-                                ) // fondo para modo oscuro
-                                : const Color(
-                                  0xFFedf0f8,
-                                ), // fondo para modo claro
-                        borderRadius: BorderRadius.circular(30),
+                            isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
+                        fontSize: 18.0,
                       ),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please Enter Email';
-                          }
-                          return null;
-                        },
-                        // controller: mailcontroller,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Email",
-                          hintStyle: TextStyle(
-                            color: Color(0xFFb2b7bf),
-                            fontSize: 18.0,
-                          ),
-                        ),
+                      floatingLabelStyle: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingrese el Apellido';
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: 30.0),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 30.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? const Color(
-                                  0xFF1E1E1E,
-                                ) // fondo para modo oscuro
-                                : const Color(
-                                  0xFFedf0f8,
-                                ), // fondo para modo claro
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please Enter Password';
-                          }
-                          return null;
-                        },
-                        // controller: passwordcontroller,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
 
-                          hintText: "Password",
-                          hintStyle: TextStyle(
-                            color: Color(0xFFb2b7bf),
-                            fontSize: 18.0,
-                          ),
-                        ),
-                        obscureText: true,
+                    const SizedBox(height: 20),
+
+                    CustomTextFormField(
+
+                      label: 'Número de celular',
+                      hint: '987654321',
+                      prefixIcon: Icon(
+                        Icons.phone_in_talk_outlined,
+                        color: colors.primary,
                       ),
+                      keyboardType: TextInputType.phone,
+                      backgroundColor:
+                          isDark
+                              ? const Color(0xFF1E1E1E)
+                              : const Color(0xFFedf0f8),
+                      textColor: isDark ? Colors.grey[300] : Colors.black87,
+                      hintStyle: TextStyle(
+                        color:
+                            isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
+                        fontSize: 18.0,
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingrese el Número de celular';
+                        }
+                        return null;
+                      },
                     ),
+
+                    const SizedBox(height: 20),
+
+                    CustomTextFormField(
+                      label: 'Correo',
+                      hint: 'ejemplo@correo.com',
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: colors.primary,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      backgroundColor:
+                          isDark
+                              ? const Color(0xFF1E1E1E)
+                              : const Color(0xFFedf0f8),
+                      textColor: isDark ? Colors.grey[300] : Colors.black87,
+                      hintStyle: TextStyle(
+                        color:
+                            isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
+                        fontSize: 18.0,
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingrese el Correo';
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    CustomTextFormField(
+                      label: 'Contraseña',
+                      hint: '*************',
+                      obscureText: true,
+                      prefixIcon: Icon(
+                        Icons.lock_outline,
+                        color: colors.primary,
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      backgroundColor:
+                          isDark
+                              ? const Color(0xFF1E1E1E)
+                              : const Color(0xFFedf0f8),
+                      textColor: isDark ? Colors.grey[300] : Colors.black87,
+                      hintStyle: TextStyle(
+                        color:
+                            isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
+                        fontSize: 18.0,
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingrese el Contraseña';
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+                    
+                    CustomTextFormField(
+                      label: 'Confirmar Contraseña',
+                      hint: 'Ingresar Contraseña',
+                      obscureText: true,
+                      prefixIcon: Icon(
+                        Icons.lock_outline,
+                        color: colors.primary,
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      backgroundColor:
+                          isDark
+                              ? const Color(0xFF1E1E1E)
+                              : const Color(0xFFedf0f8),
+                      textColor: isDark ? Colors.grey[300] : Colors.black87,
+                      hintStyle: TextStyle(
+                        color:
+                            isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
+                        fontSize: 18.0,
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '*************';
+                        }
+                        return null;
+                      },
+                    ),
+
                     const SizedBox(height: 30.0),
                     GestureDetector(
                       onTap: () {
@@ -146,24 +241,22 @@ class RegisterContent extends StatelessWidget {
                         // }
                         // registration();
                       },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 13.0,
-                          horizontal: 30.0,
+                          horizontal: 15.0,
                         ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF273671),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          // height: 50,
+                          child: CustomFilledButton(
+                            text: 'Registrate',
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            buttonColor: const Color(0xFF273671),
+                            onPressed: () {
+                              // Acción de login
+                            },
                           ),
                         ),
                       ),
@@ -174,7 +267,7 @@ class RegisterContent extends StatelessWidget {
             ),
             const SizedBox(height: 40.0),
             const Text(
-              "or LogIn with",
+              "o Inicia sesión con",
               style: TextStyle(
                 color: Color(0xFF273671),
                 fontSize: 22.0,
@@ -205,7 +298,7 @@ class RegisterContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Already have an account?",
+                  "¿Tienes una cuenta?",
                   style: TextStyle(
                     color: Color(0xFF8c8e98),
                     fontSize: 18.0,
@@ -219,7 +312,7 @@ class RegisterContent extends StatelessWidget {
                     //     MaterialPageRoute(builder: (context) => LogIn()));
                   },
                   child: const Text(
-                    "LogIn",
+                    "Ingresar",
                     style: TextStyle(
                       color: Color(0xFF273671),
                       fontSize: 20.0,
