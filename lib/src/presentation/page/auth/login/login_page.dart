@@ -1,3 +1,4 @@
+import 'package:autogas/src/presentation/page/auth/auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text('Login Page!'),
       ),
-      body: const Text('Login Page'),
+      body: const LoginContent(),
     );
   }
 }
