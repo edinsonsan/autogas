@@ -1,5 +1,6 @@
 import 'package:autogas/src/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({super.key});
@@ -22,10 +23,15 @@ class ForgotPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context.pop();
+          },
+          child: const Icon(Icons.arrow_back_ios_new_outlined),
+        ),
         backgroundColor: Colors.black,
         body: SafeArea(
           child: Padding(
@@ -53,7 +59,7 @@ class ForgotPassword extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  _buildSignUpPrompt(),
+                  _buildSignUpPrompt(context),
                 ],
               ),
             ),
@@ -62,10 +68,6 @@ class ForgotPassword extends StatelessWidget {
       ),
     );
   }
-
-
-
-
 
   Widget _buildTitle() {
     return const Center(
@@ -114,7 +116,7 @@ class ForgotPassword extends StatelessWidget {
     );
   }
 
-  Widget _buildSignUpPrompt() {
+  Widget _buildSignUpPrompt(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -125,6 +127,7 @@ class ForgotPassword extends StatelessWidget {
         const SizedBox(width: 6),
         GestureDetector(
           onTap: () {
+            context.push('/register');
             // Navigator.push(
             //     context,
             //     MaterialPageRoute(

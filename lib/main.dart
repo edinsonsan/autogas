@@ -1,5 +1,5 @@
+import 'package:autogas/src/config/router/app_router.dart';
 import 'package:autogas/src/config/theme/app_theme.dart';
-import 'package:autogas/src/presentation/page/auth/auth.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -9,11 +9,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: appRouter,
       theme: AppTheme(isDarkmode: true,selectedColor: 4).getTheme(),
       debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      home: const RegisterContent(),
+      title: 'AuTogas',
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:autogas/src/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterContent extends StatelessWidget {
   const RegisterContent({super.key});
@@ -57,7 +58,11 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.text,
               isDark: isDark,
               colors: colors,
-              validator: (value) => value == null || value.isEmpty ? 'Ingrese el Nombre' : null,
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty
+                          ? 'Ingrese el Nombre'
+                          : null,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -67,7 +72,11 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.text,
               isDark: isDark,
               colors: colors,
-              validator: (value) => value == null || value.isEmpty ? 'Ingrese el Apellido' : null,
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty
+                          ? 'Ingrese el Apellido'
+                          : null,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -77,7 +86,11 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.phone,
               isDark: isDark,
               colors: colors,
-              validator: (value) => value == null || value.isEmpty ? 'Ingrese el Número de celular' : null,
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty
+                          ? 'Ingrese el Número de celular'
+                          : null,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -87,7 +100,11 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               isDark: isDark,
               colors: colors,
-              validator: (value) => value == null || value.isEmpty ? 'Ingrese el Correo' : null,
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty
+                          ? 'Ingrese el Correo'
+                          : null,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -98,7 +115,11 @@ class RegisterContent extends StatelessWidget {
               obscureText: true,
               isDark: isDark,
               colors: colors,
-              validator: (value) => value == null || value.isEmpty ? 'Ingrese la Contraseña' : null,
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty
+                          ? 'Ingrese la Contraseña'
+                          : null,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -109,7 +130,9 @@ class RegisterContent extends StatelessWidget {
               obscureText: true,
               isDark: isDark,
               colors: colors,
-              validator: (value) => value == null || value.isEmpty ? '*************' : null,
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty ? '*************' : null,
             ),
             const SizedBox(height: 30.0),
             _buildRegisterButton(),
@@ -136,7 +159,8 @@ class RegisterContent extends StatelessWidget {
       prefixIcon: Icon(prefixIcon, color: colors.primary),
       keyboardType: keyboardType,
       obscureText: obscureText,
-      backgroundColor: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFedf0f8),
+      backgroundColor:
+          isDark ? const Color(0xFF1E1E1E) : const Color(0xFFedf0f8),
       textColor: isDark ? Colors.grey[300] : Colors.black87,
       hintStyle: TextStyle(
         color: isDark ? Colors.grey[400] : const Color(0xFFb2b7bf),
@@ -226,6 +250,7 @@ class RegisterContent extends StatelessWidget {
         const SizedBox(width: 5.0),
         GestureDetector(
           onTap: () {
+            context.push('/login');
             // Navigator.push(context, MaterialPageRoute(builder: (context) => LogIn()));
           },
           child: const Text(

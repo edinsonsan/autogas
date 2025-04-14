@@ -1,5 +1,6 @@
 import 'package:autogas/src/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginContent extends StatelessWidget {
   const LoginContent({super.key});
@@ -35,13 +36,13 @@ class LoginContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20.0),
-              _buildForgotPasswordText(),
+              _buildForgotPasswordText(context),
               const SizedBox(height: 40.0),
               _buildLoginWithText(),
               const SizedBox(height: 30.0),
               _buildSocialButtons(),
               const SizedBox(height: 40.0),
-              _buildSignUpPrompt(),
+              _buildSignUpPrompt(context),
               const SizedBox(height: 40.0),
             ],
           ),
@@ -149,9 +150,10 @@ Widget _buildLoginButton() {
   );
 }
 
-Widget _buildForgotPasswordText() {
+Widget _buildForgotPasswordText(BuildContext context) {
   return GestureDetector(
     onTap: () {
+      context.push('/forgot-password');
       // Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgotPassword()));
     },
     child: const Text(
@@ -176,64 +178,65 @@ Widget _buildLoginWithText() {
   );
 }
 
-Widget _buildSocialButtons(){
+Widget _buildSocialButtons() {
   return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // AuthMethods().signInWithGoogle(context);
-                    },
-                    child: Image.asset(
-                      "assets/images/google.png",
-                      height: 45,
-                      width: 45,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 30.0),
-                  GestureDetector(
-                    onTap: () {
-                      // AuthMethods().signInWithApple();
-                    },
-                    child: Image.asset(
-                      "assets/images/apple1.png",
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ],
-              );
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      GestureDetector(
+        onTap: () {
+          // AuthMethods().signInWithGoogle(context);
+        },
+        child: Image.asset(
+          "assets/images/google.png",
+          height: 45,
+          width: 45,
+          fit: BoxFit.cover,
+        ),
+      ),
+      const SizedBox(width: 30.0),
+      GestureDetector(
+        onTap: () {
+          // AuthMethods().signInWithApple();
+        },
+        child: Image.asset(
+          "assets/images/apple1.png",
+          height: 50,
+          width: 50,
+          fit: BoxFit.cover,
+        ),
+      ),
+    ],
+  );
 }
 
-Widget _buildSignUpPrompt(){
+Widget _buildSignUpPrompt(BuildContext context) {
   return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "¿Sin cuenta?",
-                    style: TextStyle(
-                      color: Color(0xFF8c8e98),
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(width: 5.0),
-                  GestureDetector(
-                    onTap: () {
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) => SignUp()));
-                    },
-                    child: const Text(
-                      "Regístrate",
-                      style: TextStyle(
-                        color: Color(0xFF273671),
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              );
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Text(
+        "¿Sin cuenta?",
+        style: TextStyle(
+          color: Color(0xFF8c8e98),
+          fontSize: 18.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const SizedBox(width: 5.0),
+      GestureDetector(
+        onTap: () {
+          context.push('/register');
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => SignUp()));
+        },
+        child: const Text(
+          "Regístrate",
+          style: TextStyle(
+            color: Color(0xFF273671),
+            fontSize: 20.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    ],
+  );
 }
