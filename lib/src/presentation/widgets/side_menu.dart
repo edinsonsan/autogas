@@ -37,11 +37,11 @@ class _SideMenuState extends State<SideMenu> {
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(28, hasNotch ? 0 : 20, 16, 10),
-          child: Text('Menu Principal',style: textStyles.titleMedium),
+          child: Text('Menu Principal', style: textStyles.titleMedium),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 16, 10),
-          child: Text('Edinson Sandoval', style: textStyles.titleSmall ),
+          child: Text('Edinson Sandoval', style: textStyles.titleSmall),
         ),
         ...appMenuItems
             .sublist(0, 3)

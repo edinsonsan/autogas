@@ -35,10 +35,13 @@ class CustomFilledButton extends StatelessWidget {
     return FilledButton(
       style: FilledButton.styleFrom(
         backgroundColor: buttonColor ?? colorScheme.primary,
-                padding: contentPadding ?? const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        padding:
+            contentPadding ??
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
 
         shape: RoundedRectangleBorder(
-          borderRadius: borderRadius ??
+          borderRadius:
+              borderRadius ??
               const BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30),
@@ -52,10 +55,7 @@ class CustomFilledButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (prefixIcon != null) ...[
-            prefixIcon!,
-            const SizedBox(width: 8),
-          ],
+          if (prefixIcon != null) ...[prefixIcon!, const SizedBox(width: 8)],
           Text(
             text,
             style: TextStyle(
@@ -64,10 +64,7 @@ class CustomFilledButton extends StatelessWidget {
               color: textColor ?? Colors.white,
             ),
           ),
-          if (suffixIcon != null) ...[
-            const SizedBox(width: 8),
-            suffixIcon!,
-          ],
+          if (suffixIcon != null) ...[const SizedBox(width: 8), suffixIcon!],
         ],
       ),
     );

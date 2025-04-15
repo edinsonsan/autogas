@@ -15,6 +15,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? floatingLabelStyle;
   final List<BoxShadow>? boxShadow;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final TextEditingController? controller;
 
   const CustomTextFormField({
     super.key,
@@ -29,8 +31,10 @@ class CustomTextFormField extends StatelessWidget {
     this.textColor,
     this.hintStyle,
     this.floatingLabelStyle,
-    this.boxShadow, 
+    this.boxShadow,
     this.prefixIcon,
+    this.suffixIcon,
+    this.controller
   });
 
   @override
@@ -63,6 +67,7 @@ class CustomTextFormField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        controller: controller,
         onChanged: onChanged,
         validator: validator,
         obscureText: obscureText,
@@ -72,6 +77,7 @@ class CustomTextFormField extends StatelessWidget {
           color: textColor ?? colorScheme.onSurface,
         ),
         decoration: InputDecoration(
+          suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
           floatingLabelStyle:
               floatingLabelStyle ??

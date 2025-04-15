@@ -1,12 +1,31 @@
+import 'package:autogas/src/infrastructure/inputs/inputs.dart';
+import 'package:autogas/src/presentation/page/auth/register/bloc/register_bloc.dart';
 import 'package:autogas/src/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class RegisterContent extends StatelessWidget {
-  const RegisterContent({super.key});
+  final RegisterState state;
+  final bool obscurePassword;
+  final VoidCallback onToggleVisibility;
+  const RegisterContent({
+    super.key,
+    required this.state,
+    required this.obscurePassword,
+    required this.onToggleVisibility,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final registerBloc = context.watch<RegisterBloc>();
+    final name = registerBloc.state.nombre;
+    final apellido = registerBloc.state.apellido;
+    final email = registerBloc.state.email;
+    final phone = registerBloc.state.phone;
+    final password = registerBloc.state.password;
+    final confirmPassword = registerBloc.state.confirmPassword;
+
     final colors = Theme.of(context).colorScheme;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -17,7 +36,17 @@ class RegisterContent extends StatelessWidget {
           child: Column(
             children: [
               _buildLogo(context),
-              _buildForm(context, isDark, colors),
+              _buildForm(
+                context,
+                isDark,
+                colors,
+                name,
+                apellido,
+                email,
+                phone,
+                password,
+                confirmPassword,
+              ),
               const SizedBox(height: 40.0),
               _buildSocialLoginSection(),
               const SizedBox(height: 40.0),
@@ -45,7 +74,17 @@ class RegisterContent extends StatelessWidget {
   }
 
   // Form Section
-  Widget _buildForm(BuildContext context, bool isDark, ColorScheme colors) {
+  Widget _buildForm(
+    BuildContext context,
+    bool isDark,
+    ColorScheme colors,
+    Username nombre,
+    Username apellido,
+    Email email,
+    Phone phone,
+    Password password,
+    Confirmpassword confirmPassword,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Form(
@@ -58,12 +97,19 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.text,
               isDark: isDark,
               colors: colors,
-              validator:
-                  (value) =>
-                      value == null || value.isEmpty
-                          ? 'Ingrese el Nombre'
-                          : null,
+              // validator:
+              //     (value) =>
+              //         value == null || value.isEmpty
+              //             ? 'Ingrese el Nombre'
+              //             : null,
+              onChanged: (value) {
+                context.read<RegisterBloc>().add(
+                  NameChanged(Username.dirty(value: value)),
+                );
+              },
+              errorMessage: nombre.errorMessage,
             ),
+
             const SizedBox(height: 20),
             _buildTextField(
               label: 'Apellido',
@@ -72,25 +118,17 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.text,
               isDark: isDark,
               colors: colors,
-              validator:
-                  (value) =>
-                      value == null || value.isEmpty
-                          ? 'Ingrese el Apellido'
-                          : null,
-            ),
-            const SizedBox(height: 20),
-            _buildTextField(
-              label: 'Número de celular',
-              hint: '987654321',
-              prefixIcon: Icons.phone_in_talk_outlined,
-              keyboardType: TextInputType.phone,
-              isDark: isDark,
-              colors: colors,
-              validator:
-                  (value) =>
-                      value == null || value.isEmpty
-                          ? 'Ingrese el Número de celular'
-                          : null,
+              // validator:
+              //     (value) =>
+              //         value == null || value.isEmpty
+              //             ? 'Ingrese el Apellido'
+              //             : null,
+              onChanged: (value) {
+                context.read<RegisterBloc>().add(
+                  LastnameChanged(Username.dirty(value: value)),
+                );
+              },
+              errorMessage: apellido.errorMessage,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -100,42 +138,104 @@ class RegisterContent extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               isDark: isDark,
               colors: colors,
-              validator:
-                  (value) =>
-                      value == null || value.isEmpty
-                          ? 'Ingrese el Correo'
-                          : null,
+              // validator:
+              //     (value) =>
+              //         value == null || value.isEmpty
+              //             ? 'Ingrese el Correo'
+              //             : null,
+              onChanged: (value) {
+                context.read<RegisterBloc>().add(
+                  EmailChanged(Email.dirty(value: value)),
+                );
+              },
+              errorMessage: email.errorMessage,
+            ),
+
+            const SizedBox(height: 20),
+            _buildTextField(
+              label: 'Número de celular',
+              hint: '987654321',
+              prefixIcon: Icons.phone_in_talk_outlined,
+              keyboardType: TextInputType.phone,
+              isDark: isDark,
+              colors: colors,
+              // validator:
+              //     (value) =>
+              //         value == null || value.isEmpty
+              //             ? 'Ingrese el Número de celular'
+              //             : null,
+              onChanged: (value) {
+                context.read<RegisterBloc>().add(
+                  PhoneChanged(Phone.dirty(value: value)),
+                );
+              },
+              errorMessage: phone.errorMessage,
             ),
             const SizedBox(height: 20),
             _buildTextField(
               label: 'Contraseña',
               hint: '*************',
               prefixIcon: Icons.lock_outline,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  obscurePassword ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: onToggleVisibility,
+              ),
               keyboardType: TextInputType.visiblePassword,
-              obscureText: true,
+              obscureText: obscurePassword,
               isDark: isDark,
               colors: colors,
-              validator:
-                  (value) =>
-                      value == null || value.isEmpty
-                          ? 'Ingrese la Contraseña'
-                          : null,
+              // validator:
+              //     (value) =>
+              //         value == null || value.isEmpty
+              //             ? 'Ingrese la Contraseña'
+              //             : null,
+              onChanged: (value) {
+                context.read<RegisterBloc>().add(
+                  PasswordChanged(Password.dirty(value: value)),
+                );
+              },
+              errorMessage: password.errorMessage,
             ),
             const SizedBox(height: 20),
             _buildTextField(
               label: 'Confirmar Contraseña',
               hint: 'Ingresar Contraseña',
               prefixIcon: Icons.lock_outline,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  obscurePassword ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: onToggleVisibility,
+              ),
               keyboardType: TextInputType.visiblePassword,
-              obscureText: true,
+              obscureText: obscurePassword,
               isDark: isDark,
               colors: colors,
-              validator:
-                  (value) =>
-                      value == null || value.isEmpty ? '*************' : null,
+              // validator:
+              //     (value) =>
+              //         value == null || value.isEmpty ? '*************' : null,
+              // onChanged: (value) {},
+              onChanged: (value) {
+                context.read<RegisterBloc>().add(
+                  ConfirmPasswordChanged(
+                    Confirmpassword.dirty(
+                      value: value,
+                      password: state.password.value,
+                    ),
+                  ),
+                );
+              },
+              errorMessage: confirmPassword.errorMessage,
             ),
             const SizedBox(height: 30.0),
-            _buildRegisterButton(),
+            _buildRegisterButton(
+              onPressed: () {
+                context.read<RegisterBloc>().add(FormSubmit());
+                context.read<RegisterBloc>().add(FormReset());
+              },
+            ),
           ],
         ),
       ),
@@ -143,20 +243,24 @@ class RegisterContent extends StatelessWidget {
   }
 
   // Custom Text Field
+  // (BuildContext context)
   Widget _buildTextField({
     required String label,
     required String hint,
     required IconData prefixIcon,
+    Widget? suffixIcon,
     required TextInputType keyboardType,
     bool obscureText = false,
     required bool isDark,
     required ColorScheme colors,
-    required String? Function(String?) validator,
+    required dynamic Function(String)? onChanged,
+    required String? errorMessage,
   }) {
     return CustomTextFormField(
       label: label,
       hint: hint,
       prefixIcon: Icon(prefixIcon, color: colors.primary),
+      suffixIcon: suffixIcon,
       keyboardType: keyboardType,
       obscureText: obscureText,
       backgroundColor:
@@ -171,15 +275,23 @@ class RegisterContent extends StatelessWidget {
         fontWeight: FontWeight.bold,
         fontSize: 18,
       ),
-      validator: validator,
+      // validator: validator,
+      errorMessage: errorMessage,
+      onChanged: onChanged,
     );
   }
 
   // Register Button
-  Widget _buildRegisterButton() {
+  Widget _buildRegisterButton({void Function()? onPressed}) {
     return GestureDetector(
       onTap: () {
-        // Acción de registro
+        // if(_formkey.currentState!.validate()){
+        //   setState(() {
+        //     email= mailcontroller.text;
+        //     password=passwordcontroller.text;
+        //   });
+        // }
+        // userLogin();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 15.0),
@@ -190,9 +302,7 @@ class RegisterContent extends StatelessWidget {
             fontSize: 22.0,
             fontWeight: FontWeight.bold,
             buttonColor: const Color(0xFF273671),
-            onPressed: () {
-              // Acción de login
-            },
+            onPressed: onPressed,
           ),
         ),
       ),

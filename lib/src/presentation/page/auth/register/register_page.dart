@@ -1,5 +1,7 @@
 import 'package:autogas/src/presentation/page/auth/auth.dart';
+import 'package:autogas/src/presentation/page/auth/register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -9,8 +11,21 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  bool _obscurePassword = true;
+  void _togglePasswordVisibility() {
+    _obscurePassword = !_obscurePassword;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const RegisterContent();
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      builder: (context, state) {
+        return RegisterContent(
+          state: state,
+          obscurePassword: _obscurePassword,
+          onToggleVisibility: _togglePasswordVisibility,
+        );
+      },
+    );
   }
 }

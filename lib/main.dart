@@ -1,6 +1,6 @@
+import 'package:autogas/bloc_providers.dart';
 import 'package:autogas/src/config/router/app_router.dart';
 import 'package:autogas/src/config/theme/app_theme.dart';
-import 'package:autogas/src/presentation/page/auth/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginBloc()..add(LoginInitEvent()),
+    return MultiBlocProvider(
+      providers: blocProviders,
+      // create: (context) => LoginBloc()..add(LoginInitEvent()),
       child: MaterialApp.router(
         routerConfig: appRouter,
         theme: AppTheme(isDarkmode: true, selectedColor: 4).getTheme(),

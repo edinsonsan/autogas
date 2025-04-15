@@ -1,3 +1,4 @@
+import 'package:autogas/src/infrastructure/inputs/inputs.dart';
 import 'package:autogas/src/presentation/page/auth/login/bloc/login_bloc.dart';
 import 'package:autogas/src/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,21 @@ import 'package:go_router/go_router.dart';
 
 class LoginContent extends StatelessWidget {
   final LoginState loginState;
-  const LoginContent({super.key, required this.loginState});
+  final bool obscurePassword;
+  final VoidCallback onToggleVisibility;
+  const LoginContent({
+    super.key,
+    required this.loginState,
+    required this.obscurePassword,
+    required this.onToggleVisibility,
+  });
 
   @override
   Widget build(BuildContext context) {
     // final bloc = loginState;
+    final loginBloc = context.watch<LoginBloc>();
+    final password = loginBloc.state.password;
+    final email = loginBloc.state.email;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final colors = Theme.of(context).colorScheme;
     return GestureDetector(
@@ -27,12 +38,18 @@ class LoginContent extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Form(
-                  key: loginState.formKey,
+                  // key: loginState.formKey,
                   child: Column(
                     children: [
-                      _buildEmailField(isDark, colors, context),
+                      _buildEmailField(
+                        isDark,
+                        colors,
+                        context,
+                        loginBloc,
+                        email,
+                      ),
                       const SizedBox(height: 30.0),
-                      _buildPasswordField(isDark, colors, context),
+                      _buildPasswordField(isDark, colors, context, password),
                       const SizedBox(height: 30.0),
                       _buildLoginButton(context),
                     ],
@@ -74,11 +91,14 @@ class LoginContent extends StatelessWidget {
     bool isDark,
     ColorScheme colors,
     BuildContext context,
+    LoginBloc loginBloc,
+    Email email,
   ) {
     return CustomTextFormField(
       label: 'Correo',
       hint: 'ejemplo@correo.com',
       prefixIcon: Icon(Icons.email_outlined, color: colors.primary),
+
       keyboardType: TextInputType.emailAddress,
       backgroundColor:
           isDark ? const Color(0xFF1E1E1E) : const Color(0xFFedf0f8),
@@ -92,14 +112,15 @@ class LoginContent extends StatelessWidget {
         fontWeight: FontWeight.bold,
         fontSize: 18,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Ingrese la Contraseña';
-        }
-        return null;
-      },
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return 'Ingrese la Contraseña';
+      //   }
+      //   return null;
+      // },
+      errorMessage: email.errorMessage,
       onChanged: (value) {
-        context.read<LoginBloc>().add(EmailChanged(value));
+        loginBloc.add(EmailChanged(Email.dirty(value: value)));
       },
     );
   }
@@ -108,12 +129,17 @@ class LoginContent extends StatelessWidget {
     bool isDark,
     ColorScheme colors,
     BuildContext context,
+    Password password,
   ) {
     return CustomTextFormField(
       label: 'Contraseña',
-      obscureText: true,
+      obscureText: obscurePassword,
       hint: '************',
       prefixIcon: Icon(Icons.lock_outline, color: colors.primary),
+      suffixIcon: IconButton(
+        icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
+        onPressed: onToggleVisibility,
+      ),
       keyboardType: TextInputType.visiblePassword,
       backgroundColor:
           isDark ? const Color(0xFF1E1E1E) : const Color(0xFFedf0f8),
@@ -127,14 +153,17 @@ class LoginContent extends StatelessWidget {
         fontWeight: FontWeight.bold,
         fontSize: 18,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Ingrese la contraseña';
-        }
-        return null;
-      },
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return 'Ingrese la contraseña';
+      //   }
+      //   return null;
+      // },
+      errorMessage: password.errorMessage,
       onChanged: (value) {
-        context.read<LoginBloc>().add(PasswordChanged(value));
+        context.read<LoginBloc>().add(
+          PasswordChanged(Password.dirty(value: value)),
+        );
       },
     );
   }

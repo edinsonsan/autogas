@@ -11,8 +11,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _obscurePassword = true;
 
-  
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,8 @@ class _LoginPageState extends State<LoginPage> {
 
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
-        return LoginContent(loginState: state);
+        return LoginContent(loginState: state, obscurePassword: _obscurePassword,
+        onToggleVisibility: _togglePasswordVisibility,);
       },
     );
   }
