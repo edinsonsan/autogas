@@ -1,3 +1,4 @@
+import 'package:autogas/src/presentation/page/auth/auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -10,11 +11,6 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register Page!'),
-      ),
-      body: const Text('Register Page'),
-    );
+    return const RegisterContent();
   }
 }
