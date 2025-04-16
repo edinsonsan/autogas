@@ -13,7 +13,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePassword = true;
   void _togglePasswordVisibility() {
+    setState(() {
     _obscurePassword = !_obscurePassword;
+    });
   }
 
   @override
