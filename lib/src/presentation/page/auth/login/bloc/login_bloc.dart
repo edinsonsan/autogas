@@ -17,6 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<FormSubmit>(_onFormSubmit);
+    on<ForceValidate>(_onForceValidate);
   }
 
   void _onEmailChanged(EmailChanged event, Emitter<LoginState> emit) {
@@ -52,5 +53,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
     print('Email: ${state.email}');
     print('Passwod: ${state.password}');
+  }
+
+  void _onForceValidate(ForceValidate event, Emitter<LoginState> emit) {
+    final email = Email.dirty(value: state.email.value);
+    final password = Password.dirty(value: state.password.value);
+
+    emit(
+      state.copyWith(
+        email: email,
+        password: password,
+        isValid: Formz.validate([
+          email,
+          password,
+        ]),
+      ),
+    );
   }
 }

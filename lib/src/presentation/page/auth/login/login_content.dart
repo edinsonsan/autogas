@@ -190,7 +190,10 @@ class LoginContent extends StatelessWidget {
             fontWeight: FontWeight.bold,
             buttonColor: const Color(0xFF273671),
             onPressed: () {
-              context.read<LoginBloc>().add(FormSubmit());
+              if (loginState.isValid) {
+                context.read<LoginBloc>().add(FormSubmit());
+              }
+              context.read<LoginBloc>().add(ForceValidate());
             },
           ),
         ),

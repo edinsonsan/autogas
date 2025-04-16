@@ -363,7 +363,7 @@ class RegisterContent extends StatelessWidget {
         const SizedBox(width: 5.0),
         GestureDetector(
           onTap: () {
-            context.push('/login');
+            context.pop();
             // Navigator.push(context, MaterialPageRoute(builder: (context) => LogIn()));
           },
           child: const Text(

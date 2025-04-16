@@ -1,28 +1,33 @@
+import 'package:autogas/src/infrastructure/inputs/inputs.dart';
+import 'package:autogas/src/presentation/page/auth/forgot_password/bloc/forgot_bloc.dart';
 import 'package:autogas/src/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ForgotPassword extends StatelessWidget {
-  ForgotPassword({super.key});
+  const ForgotPassword({super.key});
 
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  // final _formKey = GlobalKey<FormState>();
+  // final _emailController = TextEditingController();
 
-  void _onSendEmail(BuildContext context) {
-    if (_formKey.currentState?.validate() ?? false) {
-      final email = _emailController.text.trim();
+  // void _onSendEmail(BuildContext context) {
+  //   if (_formKey.currentState?.validate() ?? false) {
+  //     final email = _emailController.text.trim();
 
-      // Aquí va tu lógica (Bloc event, etc.)
-      print('Enviar correo a: $email');
+  //     // Aquí va tu lógica (Bloc event, etc.)
+  //     print('Enviar correo a: $email');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Correo de recuperación enviado")),
-      );
-    }
-  }
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text("Correo de recuperación enviado")),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final ForgotBloc forgotBloc = context.watch<ForgotBloc>();
+    final email = forgotBloc.state.email;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -46,16 +51,24 @@ class ForgotPassword extends StatelessWidget {
                   _buildSubtitle(),
                   const SizedBox(height: 30),
 
-                  _buildEmailForm(context),
+                  _buildEmailForm(context, email),
 
                   const SizedBox(height: 40),
-                  Center(
-                    child: CustomFilledButton(
-                      text: "Enviar correo",
-                      onPressed: () => _onSendEmail(context),
-                      buttonColor: Colors.white,
-                      textColor: Colors.black,
-                      prefixIcon: const Icon(Icons.send, color: Colors.black),
+                  context.select(
+                    (ForgotBloc forgotBloc) => Center(
+                      child: CustomFilledButton(
+                        text: "Enviar correo",
+
+                        onPressed: () {
+                          if (forgotBloc.state.isValid) {
+                            context.read<ForgotBloc>().add(FormSubmit());
+                          }
+                          context.read<ForgotBloc>().add(ForceValidate());
+                        },
+                        buttonColor: Colors.white,
+                        textColor: Colors.black,
+                        prefixIcon: const Icon(Icons.send, color: Colors.black),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -91,7 +104,7 @@ class ForgotPassword extends StatelessWidget {
     );
   }
 
-  Widget _buildEmailForm(BuildContext context) {
+  Widget _buildEmailForm(BuildContext context, Email email) {
     final colors = Theme.of(context).colorScheme;
     return Form(
       // key: _formkey,
@@ -103,15 +116,21 @@ class ForgotPassword extends StatelessWidget {
         prefixIcon: const Icon(Icons.email, color: Colors.white70),
         // ignore: deprecated_member_use
         backgroundColor: colors.surface.withOpacity(0.1),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Por favor, introduce tu correo';
-          }
-          if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$").hasMatch(value)) {
-            return 'Introduce un correo válido';
-          }
-          return null;
+        // validator: (value) {
+        //   if (value == null || value.isEmpty) {
+        //     return 'Por favor, introduce tu correo';
+        //   }
+        //   if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$").hasMatch(value)) {
+        //     return 'Introduce un correo válido';
+        //   }
+        //   return null;
+        // },
+        onChanged: (value) {
+          context.read<ForgotBloc>().add(
+            EmailChanged(Email.dirty(value: value)),
+          );
         },
+        errorMessage: email.errorMessage,
       ),
     );
   }
@@ -127,7 +146,7 @@ class ForgotPassword extends StatelessWidget {
         const SizedBox(width: 6),
         GestureDetector(
           onTap: () {
-            context.push('/register');
+            context.pop();
             // Navigator.push(
             //     context,
             //     MaterialPageRoute(
