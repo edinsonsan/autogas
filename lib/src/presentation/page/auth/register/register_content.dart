@@ -232,8 +232,11 @@ class RegisterContent extends StatelessWidget {
             const SizedBox(height: 30.0),
             _buildRegisterButton(
               onPressed: () {
-                context.read<RegisterBloc>().add(FormSubmit());
-                context.read<RegisterBloc>().add(FormReset());
+                if (state.isValid) {
+                  context.read<RegisterBloc>().add(FormSubmit());
+                // context.read<RegisterBloc>().add(FormReset());
+                }
+                context.read<RegisterBloc>().add(ForceValidate());
               },
             ),
           ],

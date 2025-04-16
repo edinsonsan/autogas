@@ -42,3 +42,5 @@ class SaveUserSession extends RegisterEvent {
 class FormSubmit extends RegisterEvent {}
 
 class FormReset extends RegisterEvent {}
+
+class ForceValidate extends RegisterEvent {}

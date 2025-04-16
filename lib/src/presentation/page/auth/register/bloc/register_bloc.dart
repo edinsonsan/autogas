@@ -17,6 +17,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
     on<FormSubmit>(_onFormSubmit);
     on<FormReset>(_onFormReset);
+    on<ForceValidate>(_onForceValidate);
   }
 
   void _onNameChanged(NameChanged event, Emitter<RegisterState> emit) {
@@ -93,6 +94,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   void _onPasswordChanged(PasswordChanged event, Emitter<RegisterState> emit) {
     final password = event.password;
+    final confirmPassword = Confirmpassword.dirty(
+      password: password.value,
+      value: state.confirmPassword.value,
+    );
     emit(
       state.copyWith(
         password: password,
@@ -102,7 +107,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           state.email,
           state.phone,
           password,
-          state.confirmPassword,
+          confirmPassword,
         ]),
         // formKey: formKey,
       ),
@@ -113,7 +118,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     ConfirmPasswordChanged event,
     Emitter<RegisterState> emit,
   ) {
-    final confirmPassword = event.confirmPassword;
+    final confirmPassword = Confirmpassword.dirty(
+      password: state.password.value,
+      value: event.confirmPassword.value,
+    );
     emit(
       state.copyWith(
         confirmPassword: confirmPassword,
@@ -172,6 +180,37 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         confirmPassword: const Confirmpassword.pure(''),
         formStatus: FormStatus.invalid,
         isValid: false,
+      ),
+    );
+  }
+
+  void _onForceValidate(ForceValidate event, Emitter<RegisterState> emit) {
+    final nombre = Username.dirty(value: state.nombre.value);
+    final apellido = Username.dirty(value: state.apellido.value);
+    final email = Email.dirty(value: state.email.value);
+    final phone = Phone.dirty(value: state.phone.value);
+    final password = Password.dirty(value: state.password.value);
+    final confirmPassword = Confirmpassword.dirty(
+      value: state.confirmPassword.value,
+      password: state.password.value,
+    );
+
+    emit(
+      state.copyWith(
+        nombre: nombre,
+        apellido: apellido,
+        email: email,
+        phone: phone,
+        password: password,
+        confirmPassword: confirmPassword,
+        isValid: Formz.validate([
+          nombre,
+          apellido,
+          email,
+          phone,
+          password,
+          confirmPassword,
+        ]),
       ),
     );
   }
