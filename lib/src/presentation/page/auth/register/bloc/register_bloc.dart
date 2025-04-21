@@ -1,4 +1,4 @@
-import 'package:autogas/src/infrastructure/inputs/inputs.dart';
+import 'package:autogas/src/presentation/shared/infrastructure/inputs/inputs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';

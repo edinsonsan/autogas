@@ -1,6 +1,6 @@
-import 'package:autogas/src/infrastructure/inputs/inputs.dart';
+import 'package:autogas/src/presentation/shared/infrastructure/inputs/inputs.dart';
 import 'package:autogas/src/presentation/page/auth/forgot_password/bloc/forgot_bloc.dart';
-import 'package:autogas/src/presentation/widgets/widgets.dart';
+import 'package:autogas/src/presentation/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -114,6 +114,7 @@ class ForgotPassword extends StatelessWidget {
         label: "Correo",
         keyboardType: TextInputType.emailAddress,
         prefixIcon: const Icon(Icons.email, color: Colors.white70),
+        textColor: colors.secondary,
         // ignore: deprecated_member_use
         backgroundColor: colors.surface.withOpacity(0.1),
         // validator: (value) {

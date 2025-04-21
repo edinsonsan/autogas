@@ -1,6 +1,6 @@
-import 'package:autogas/src/infrastructure/inputs/inputs.dart';
+import 'package:autogas/src/presentation/shared/infrastructure/inputs/inputs.dart';
 import 'package:autogas/src/presentation/page/auth/register/bloc/register_bloc.dart';
-import 'package:autogas/src/presentation/widgets/widgets.dart';
+import 'package:autogas/src/presentation/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -178,7 +178,7 @@ class RegisterContent extends StatelessWidget {
               prefixIcon: Icons.lock_outline,
               suffixIcon: IconButton(
                 icon: Icon(
-                  obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  obscurePassword ? Icons.visibility_off : Icons.visibility, color: colors.primary,
                 ),
                 onPressed: onToggleVisibility,
               ),
@@ -205,7 +205,7 @@ class RegisterContent extends StatelessWidget {
               prefixIcon: Icons.lock_outline,
               suffixIcon: IconButton(
                 icon: Icon(
-                  obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  obscurePassword ? Icons.visibility_off : Icons.visibility, color: colors.primary,
                 ),
                 onPressed: onToggleVisibility,
               ),

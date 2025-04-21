@@ -1,10 +1,13 @@
 import 'package:formz/formz.dart';
 
 // Define input validation errors
-enum ConfirmpasswordError { empty, length, mismatch }
+enum ConfirmpasswordError { empty, length, mismatch, format }
 
 // Extend FormzInput and provide the input type and error type.
 class Confirmpassword extends FormzInput<String, ConfirmpasswordError> {
+  static final RegExp passwordRegExp = RegExp(
+    r'(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
+  );
   final String password;
   // Call super.pure to represent an unmodified form input.
   const Confirmpassword.pure(this.password) : super.pure('');
@@ -23,6 +26,8 @@ class Confirmpassword extends FormzInput<String, ConfirmpasswordError> {
         return 'Mínimo 6 caracteres';
       case ConfirmpasswordError.mismatch:
         return 'Las contraseñas no coinciden';
+      case ConfirmpasswordError.format:
+        return 'Debe de tener Mayúscula, letras y un número';
       default:
         return null;
     }
@@ -34,6 +39,7 @@ class Confirmpassword extends FormzInput<String, ConfirmpasswordError> {
     if (value.isEmpty) return ConfirmpasswordError.empty;
     if (value.length < 6) return ConfirmpasswordError.length;
     if (value != password) return ConfirmpasswordError.mismatch;
+    if ( !passwordRegExp.hasMatch(value) ) return ConfirmpasswordError.format;
     return null;
   }
 }

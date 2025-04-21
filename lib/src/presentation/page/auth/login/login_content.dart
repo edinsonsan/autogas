@@ -1,6 +1,6 @@
-import 'package:autogas/src/infrastructure/inputs/inputs.dart';
+import 'package:autogas/src/presentation/shared/infrastructure/inputs/inputs.dart';
 import 'package:autogas/src/presentation/page/auth/login/bloc/login_bloc.dart';
-import 'package:autogas/src/presentation/widgets/widgets.dart';
+import 'package:autogas/src/presentation/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -138,7 +138,7 @@ class LoginContent extends StatelessWidget {
       prefixIcon: Icon(Icons.lock_outline, color: colors.primary),
       suffixIcon: IconButton(
         icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
-        onPressed: onToggleVisibility,
+        onPressed: onToggleVisibility, color: colors.primary,
       ),
       keyboardType: TextInputType.visiblePassword,
       backgroundColor:
