@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:autogas/src/domain/models/user.dart';
+import 'package:autogas/features/auth/domain/models/user.dart';
 
 AuthResponse authResponseFromJson(String str) => AuthResponse.fromJson(json.decode(str));
 

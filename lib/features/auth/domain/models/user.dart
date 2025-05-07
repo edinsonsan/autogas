@@ -1,4 +1,4 @@
-import 'package:autogas/src/domain/models/role.dart';
+import 'package:autogas/features/auth/domain/models/role.dart';
 
 class User {
     final int id;

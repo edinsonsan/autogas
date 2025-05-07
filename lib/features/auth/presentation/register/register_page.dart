@@ -1,5 +1,5 @@
-import 'package:autogas/src/presentation/page/auth/auth.dart';
-import 'package:autogas/src/presentation/page/auth/register/bloc/register_bloc.dart';
+import 'package:autogas/features/auth/auth.dart';
+import 'package:autogas/features/auth/presentation/register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

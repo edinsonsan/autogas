@@ -1,6 +1,6 @@
 
 import 'package:go_router/go_router.dart';
-import 'package:autogas/src/presentation/page/auth/auth.dart';
+import 'package:autogas/features/auth/auth.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
@@ -21,7 +21,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/forgot-password',
       // name: ButtonsScreen.name,
-      builder: (context, state) => ForgotPassword(),
+      builder: (context, state) => const ForgotPassword(),
     ),
 
     // GoRoute(

@@ -1,6 +1,6 @@
-import 'package:autogas/src/presentation/shared/infrastructure/inputs/inputs.dart';
-import 'package:autogas/src/presentation/page/auth/forgot_password/bloc/forgot_bloc.dart';
-import 'package:autogas/src/presentation/shared/widgets/widgets.dart';
+import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
+import 'package:autogas/features/auth/presentation/forgot_password/bloc/forgot_bloc.dart';
+import 'package:autogas/features/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

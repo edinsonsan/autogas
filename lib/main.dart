@@ -1,5 +1,5 @@
 import 'package:autogas/bloc_providers.dart';
-import 'package:autogas/src/config/config.dart';
+import 'package:autogas/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
