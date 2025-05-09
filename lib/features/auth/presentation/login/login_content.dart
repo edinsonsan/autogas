@@ -1,6 +1,6 @@
-import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:autogas/features/auth/presentation/login/bloc/login_bloc.dart';
-import 'package:autogas/features/shared/widgets/widgets.dart';
+import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,8 +16,22 @@ class LoginContent extends StatelessWidget {
     required this.onToggleVisibility,
   });
 
+  void snackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(errorMessage)));
+  }
+
   @override
   Widget build(BuildContext context) {
+    // BlocListener<LoginBloc, LoginState>(
+    //   listenWhen: (previous, current) => current.errorMessage.isNotEmpty,
+    //   listener: (context, state) {
+    //     snackBar(context, state.errorMessage);
+    //   },
+    //   child: Container(),
+    // );
     // final bloc = loginState;
     final loginBloc = context.watch<LoginBloc>();
     final password = loginBloc.state.password;
@@ -26,9 +40,7 @@ class LoginContent extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        // backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+      child: SingleChildScrollView(
           // physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
@@ -68,7 +80,6 @@ class LoginContent extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 
@@ -138,7 +149,8 @@ class LoginContent extends StatelessWidget {
       prefixIcon: Icon(Icons.lock_outline, color: colors.primary),
       suffixIcon: IconButton(
         icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
-        onPressed: onToggleVisibility, color: colors.primary,
+        onPressed: onToggleVisibility,
+        color: colors.primary,
       ),
       keyboardType: TextInputType.visiblePassword,
       backgroundColor:
@@ -179,25 +191,43 @@ class LoginContent extends StatelessWidget {
         // }
         // userLogin();
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 15.0),
-        child: SizedBox(
-          width: double.infinity,
-          // height: 50,
-          child: CustomFilledButton(
-            text: 'Ingresar',
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold,
-            buttonColor: const Color(0xFF273671),
-            onPressed: () {
-              if (loginState.isValid) {
-                context.read<LoginBloc>().add(FormSubmit());
-              }
-              context.read<LoginBloc>().add(ForceValidate());
-            },
-          ),
-        ),
+
+child: Padding(
+  padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 15.0),
+  child: SizedBox(
+    width: double.infinity,
+    child: FadeIn(
+      duration: const Duration(milliseconds: 300),
+      child: CustomFilledButton(
+        text: (loginState.formStatus == FormStatus.validating)
+            ? '' // Ocultamos texto mientras carga
+            : 'Ingresar',
+        fontSize: 22.0,
+        fontWeight: FontWeight.bold,
+        buttonColor: const Color(0xFF273671),
+        onPressed: (loginState.formStatus == FormStatus.validating)
+            ? null
+            : () {
+                if (loginState.isValid) {
+                  context.read<LoginBloc>().add(FormSubmit());
+                }
+                context.read<LoginBloc>().add(ForceValidate());
+              },
+        customChild: (loginState.formStatus == FormStatus.validating)
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : null,
       ),
+    ),
+  ),
+),
+
     );
   }
 

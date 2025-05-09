@@ -1,4 +1,6 @@
+import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
+import 'package:autogas/features/shared/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +11,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   // final formKey = GlobalKey<FormState>();
+  LoginUsescase loginUsescase = LoginUsescase();
   LoginBloc() : super(const LoginState()) {
     // on<LoginInitEvent>((event, emit) {
     //   emit(state.copyWith(formKey: formKey));
@@ -42,17 +45,34 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
   }
 
-  void _onFormSubmit(FormSubmit event, Emitter<LoginState> emit) {
+  void _onFormSubmit(FormSubmit event, Emitter<LoginState> emit) async {
+    final email = Email.dirty(value: state.email.value);
+    final password = Password.dirty(value: state.password.value);
+    final isValid = Formz.validate([email, password]);
+
+    // Actualizamos el estado con campos "tocados"
+    emit(state.copyWith(email: email, password: password, isValid: isValid));
+
+    // Si no es válido, no seguimos
+    if (!isValid) return;
+
+    // Ahora sí, se emite el estado de carga
+    emit(
+      state.copyWith(formStatus: FormStatus.validating, response: Loading()),
+    );
+
+    // Hacemos el login
+  
+    final response = await loginUsescase.run(email.value, password.value);
+
+    // Emitimos el resultado del login
     emit(
       state.copyWith(
-        formStatus: FormStatus.validating,
-        password: Password.dirty(value: state.password.value),
-        email: Email.dirty(value: state.email.value),
-        isValid: Formz.validate([state.password, state.email]),
+        formStatus:
+            response is Success ? FormStatus.success : FormStatus.failure,
+        response: response,
       ),
     );
-    print('Email: ${state.email}');
-    print('Passwod: ${state.password}');
   }
 
   void _onForceValidate(ForceValidate event, Emitter<LoginState> emit) {
@@ -63,10 +83,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       state.copyWith(
         email: email,
         password: password,
-        isValid: Formz.validate([
-          email,
-          password,
-        ]),
+        isValid: Formz.validate([email, password]),
       ),
     );
   }

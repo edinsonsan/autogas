@@ -12,6 +12,7 @@ class CustomFilledButton extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Widget? customChild;
 
   const CustomFilledButton({
     super.key,
@@ -25,6 +26,7 @@ class CustomFilledButton extends StatelessWidget {
     this.contentPadding,
     this.prefixIcon,
     this.suffixIcon,
+    this.customChild,
   });
 
   @override
@@ -51,7 +53,8 @@ class CustomFilledButton extends StatelessWidget {
       ),
 
       onPressed: onPressed,
-      child: Row(
+      child: customChild ?? 
+      Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
