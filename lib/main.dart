@@ -1,9 +1,12 @@
 import 'package:autogas/bloc_providers.dart';
 import 'package:autogas/config/config.dart';
+import 'package:autogas/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
   await Environment.initEnvironment();
   runApp(const MyApp());
 }

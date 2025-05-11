@@ -42,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
         },
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
-            print('Current state: ${state.response.runtimeType}');
             final content = LoginContent(
               loginState: state,
               obscurePassword: _obscurePassword,

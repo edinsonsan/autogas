@@ -1,4 +1,4 @@
-import 'package:autogas/features/auth/domain/domain.dart';
+import 'package:autogas/core/usesCases/auth/auth_usescases.dart';
 import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
 import 'package:autogas/features/shared/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +10,9 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  AuthUsescases authUsesCases;
   // final formKey = GlobalKey<FormState>();
-  LoginUsescase loginUsescase = LoginUsescase();
-  LoginBloc() : super(const LoginState()) {
+  LoginBloc(this.authUsesCases) : super(const LoginState()) {
     // on<LoginInitEvent>((event, emit) {
     //   emit(state.copyWith(formKey: formKey));
     // });
@@ -62,8 +62,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
 
     // Hacemos el login
-  
-    final response = await loginUsescase.run(email.value, password.value);
+
+    final response = await authUsesCases.login.run(email.value, password.value);
 
     // Emitimos el resultado del login
     emit(
