@@ -5,13 +5,13 @@ sealed class RegisterEvent {
 }
 
 class NameChanged extends RegisterEvent {
-  final Username nombre;
-  const NameChanged(this.nombre);
+  final Username name;
+  const NameChanged(this.name);
 }
 
 class LastnameChanged extends RegisterEvent {
-  final Username apellido;
-  const LastnameChanged(this.apellido);
+  final Username lastname;
+  const LastnameChanged(this.lastname);
 }
 
 class EmailChanged extends RegisterEvent {

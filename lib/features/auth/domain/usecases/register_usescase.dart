@@ -1,10 +1,10 @@
 import 'package:autogas/features/auth/domain/domain.dart';
 // import 'package:autogas/features/auth/domain/domain.dart';
 
-class LoginUsescase {
+class RegisterUsescase {
   AuthRepository authRepository;
 
-  LoginUsescase({required this.authRepository});
+  RegisterUsescase({required this.authRepository});
 
-  run(String email, String password) => authRepository.login(email, password);
+  run(User user) => authRepository.register(user);
 }

@@ -1,4 +1,6 @@
-import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
+import 'package:autogas/core/usesCases/auth/auth_usescases.dart';
+import 'package:autogas/features/auth/domain/domain.dart';
+import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -7,7 +9,8 @@ part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc() : super(const RegisterState()) {
+  AuthUsescases authUsescases;
+  RegisterBloc(this.authUsescases) : super(const RegisterState()) {
     on<NameChanged>(_onNameChanged);
     on<LastnameChanged>(_onLastnameChanged);
     on<EmailChanged>(_onEmailChanged);
@@ -21,13 +24,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   void _onNameChanged(NameChanged event, Emitter<RegisterState> emit) {
-    final nombre = event.nombre;
+    final name = event.name;
     emit(
       state.copyWith(
-        nombre: nombre,
+        name: name,
         isValid: Formz.validate([
-          nombre,
-          state.apellido,
+          name,
+          state.lastname,
           state.email,
           state.phone,
           state.password,
@@ -39,13 +42,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   void _onLastnameChanged(LastnameChanged event, Emitter<RegisterState> emit) {
-    final apellido = event.apellido;
+    final lastname = event.lastname;
     emit(
       state.copyWith(
-        apellido: apellido,
+        lastname: lastname,
         isValid: Formz.validate([
-          state.nombre,
-          apellido,
+          state.name,
+          lastname,
           state.email,
           state.phone,
           state.password,
@@ -62,8 +65,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(
         email: email,
         isValid: Formz.validate([
-          state.nombre,
-          state.apellido,
+          state.name,
+          state.lastname,
           email,
           state.phone,
           state.password,
@@ -80,8 +83,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(
         phone: phone,
         isValid: Formz.validate([
-          state.nombre,
-          state.apellido,
+          state.name,
+          state.lastname,
           state.email,
           phone,
           state.password,
@@ -102,8 +105,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(
         password: password,
         isValid: Formz.validate([
-          state.nombre,
-          state.apellido,
+          state.name,
+          state.lastname,
           state.email,
           state.phone,
           password,
@@ -126,8 +129,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(
         confirmPassword: confirmPassword,
         isValid: Formz.validate([
-          state.nombre,
-          state.apellido,
+          state.name,
+          state.lastname,
           state.email,
           state.phone,
           state.password,
@@ -138,42 +141,66 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
   }
 
-  void _onFormSubmit(FormSubmit event, Emitter<RegisterState> emit) {
-    emit(
-      state.copyWith(
-        formStatus: FormStatus.validating,
-        nombre: Username.dirty(value: state.nombre.value),
-        apellido: Username.dirty(value: state.apellido.value),
-        email: Email.dirty(value: state.email.value),
-        phone: Phone.dirty(value: state.phone.value),
-        password: Password.dirty(value: state.password.value),
-        confirmPassword: Confirmpassword.dirty(
-          value: state.confirmPassword.value,
-          password: state.password.value,
-        ),
-        isValid: Formz.validate([
-          state.nombre,
-          state.apellido,
-          state.email,
-          state.phone,
-          state.password,
-          state.confirmPassword,
-        ]),
-      ),
-    );
-    print('Name: ${state.nombre}');
-    print('LastName: ${state.apellido}');
-    print('email: ${state.email}');
-    print('phone: ${state.phone}');
-    print('password: ${state.password}');
-    print('confirmPassword: ${state.confirmPassword}');
-  }
+  void _onFormSubmit(FormSubmit event, Emitter<RegisterState> emit) async {
+  // Marcamos los campos como "dirty" para que se actualice su validación
+  final name = Username.dirty(value: state.name.value);
+  final lastname = Username.dirty(value: state.lastname.value);
+  final email = Email.dirty(value: state.email.value);
+  final phone = Phone.dirty(value: state.phone.value);
+  final password = Password.dirty(value: state.password.value);
+  final confirmPassword = Confirmpassword.dirty(
+    value: state.confirmPassword.value,
+    password: state.password.value,
+  );
+
+  // Validamos el formulario
+  final isValid = Formz.validate([
+    name,
+    lastname,
+    email,
+    phone,
+    password,
+    confirmPassword,
+  ]);
+
+  // Emitimos el nuevo estado con campos "tocados" y validez
+  emit(
+    state.copyWith(
+      name: name,
+      lastname: lastname,
+      email: email,
+      phone: phone,
+      password: password,
+      confirmPassword: confirmPassword,
+      isValid: isValid,
+    ),
+  );
+
+  // Si no es válido, no continuamos
+  if (!isValid) return;
+
+  // Indicamos que se está procesando
+  emit(state.copyWith(formStatus: FormStatus.validating, response: Loading()));
+
+  // Llamamos al caso de uso del registro (asegúrate de tenerlo en tus use cases)
+  final response = await authUsescases.register.run(state.toUser());
+
+  // Emitimos el resultado del registro
+  emit(
+    state.copyWith(
+      formStatus:
+          response is Success ? FormStatus.success : FormStatus.failure,
+      response: response,
+    ),
+  );
+}
+
 
   void _onFormReset(FormReset event, Emitter<RegisterState> emit) {
     emit(
       state.copyWith(
-        nombre: const Username.pure(),
-        apellido: const Username.pure(),
+        name: const Username.pure(),
+        lastname: const Username.pure(),
         email: const Email.pure(),
         phone: const Phone.pure(),
         password: const Password.pure(),
@@ -185,8 +212,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   void _onForceValidate(ForceValidate event, Emitter<RegisterState> emit) {
-    final nombre = Username.dirty(value: state.nombre.value);
-    final apellido = Username.dirty(value: state.apellido.value);
+    final name = Username.dirty(value: state.name.value);
+    final lastname = Username.dirty(value: state.lastname.value);
     final email = Email.dirty(value: state.email.value);
     final phone = Phone.dirty(value: state.phone.value);
     final password = Password.dirty(value: state.password.value);
@@ -197,15 +224,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
     emit(
       state.copyWith(
-        nombre: nombre,
-        apellido: apellido,
+        name: name,
+        lastname: lastname,
         email: email,
         phone: phone,
         password: password,
         confirmPassword: confirmPassword,
         isValid: Formz.validate([
-          nombre,
-          apellido,
+          name,
+          lastname,
           email,
           phone,
           password,

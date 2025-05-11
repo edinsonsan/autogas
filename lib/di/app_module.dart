@@ -13,7 +13,8 @@ abstract class AppModule {
 
   @injectable
   AuthUsescases get authUsescases => AuthUsescases(
-        login: LoginUsescase(repository: authRepository),
+        login: LoginUsescase(authRepository: authRepository),
+        register: RegisterUsescase(authRepository: authRepository),
       );
 
 }

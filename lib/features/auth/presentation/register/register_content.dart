@@ -19,8 +19,8 @@ class RegisterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registerBloc = context.watch<RegisterBloc>();
-    final name = registerBloc.state.nombre;
-    final apellido = registerBloc.state.apellido;
+    final name = registerBloc.state.name;
+    final lastname = registerBloc.state.lastname;
     final email = registerBloc.state.email;
     final phone = registerBloc.state.phone;
     final password = registerBloc.state.password;
@@ -41,7 +41,7 @@ class RegisterContent extends StatelessWidget {
                 isDark,
                 colors,
                 name,
-                apellido,
+                lastname,
                 email,
                 phone,
                 password,
@@ -78,8 +78,8 @@ class RegisterContent extends StatelessWidget {
     BuildContext context,
     bool isDark,
     ColorScheme colors,
-    Username nombre,
-    Username apellido,
+    Username name,
+    Username lastname,
     Email email,
     Phone phone,
     Password password,
@@ -107,7 +107,7 @@ class RegisterContent extends StatelessWidget {
                   NameChanged(Username.dirty(value: value)),
                 );
               },
-              errorMessage: nombre.errorMessage,
+              errorMessage: name.errorMessage,
             ),
 
             const SizedBox(height: 20),
@@ -128,7 +128,7 @@ class RegisterContent extends StatelessWidget {
                   LastnameChanged(Username.dirty(value: value)),
                 );
               },
-              errorMessage: apellido.errorMessage,
+              errorMessage: lastname.errorMessage,
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -231,13 +231,24 @@ class RegisterContent extends StatelessWidget {
             ),
             const SizedBox(height: 30.0),
             _buildRegisterButton(
-              onPressed: () {
+              onPressed: (state.formStatus == FormStatus.validating)
+            ? null
+            : () {
                 if (state.isValid) {
                   context.read<RegisterBloc>().add(FormSubmit());
-                // context.read<RegisterBloc>().add(FormReset());
                 }
                 context.read<RegisterBloc>().add(ForceValidate());
               },
+        customChild: (state.formStatus == FormStatus.validating)
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : null,
             ),
           ],
         ),
@@ -285,7 +296,7 @@ class RegisterContent extends StatelessWidget {
   }
 
   // Register Button
-  Widget _buildRegisterButton({void Function()? onPressed}) {
+  Widget _buildRegisterButton({void Function()? onPressed, Widget? customChild}) {
     return GestureDetector(
       onTap: () {
         // if(_formkey.currentState!.validate()){
@@ -305,7 +316,7 @@ class RegisterContent extends StatelessWidget {
             fontSize: 22.0,
             fontWeight: FontWeight.bold,
             buttonColor: const Color(0xFF273671),
-            onPressed: onPressed,
+            onPressed: onPressed, customChild: customChild,
           ),
         ),
       ),

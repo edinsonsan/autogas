@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:autogas/config/config.dart';
+import 'package:autogas/features/auth/data/data.dart';
 import 'package:autogas/features/auth/data/models/auth_response_model.dart';
 import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -61,7 +62,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         return ErrorData(MessageParser.parseMessage(data['message']));
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404) {
         return ErrorData(
           e.response?.data['message'] ?? 'Credenciales incorrectas',
         );
@@ -88,9 +89,46 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<Resource<AuthResponse>> register(User user) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<Resource<AuthResponse>> register(User user) async {
+    try {
+      Map<String, String> headers = {'Content-Type': 'application/json'};
+      final response = await dio.post(
+        '/auth/register',
+        data: UserModel.fromEntity(user).toRegisterJson(),
+        options: Options(headers: headers),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+
+        final authResponse = AuthResponseModel.fromJson(data);
+        // final authResponse = authResponseModel.toEntity();  modelo a la entidad
+        print('Data Remote: ${authResponse.toJson()}');
+        print('Token: ${authResponse.token}');
+        return Success(authResponse.toEntity());
+      } else {
+        final data = response.data;
+        return ErrorData(MessageParser.parseMessage(data['message']));
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400 || e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404 || e.response?.statusCode == 409) {
+        return ErrorData(
+          e.response?.data['message'] ?? 'Datos incorrectos',
+        );
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return ErrorData('Revisar conexión a internet');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        return ErrorData('Tiempo de espera agotado');
+      } else if (e.response != null && e.response?.statusCode == 500) {
+        return ErrorData('Error del servidor: ${e.response?.data['message']}');
+      } else {
+        return ErrorData('Dio Error inesperado: ${e.message}');
+      }
+    } catch (e) {
+      return ErrorData('Error inesperado: ${e.toString()}');
+    }
   }
 
   @override
