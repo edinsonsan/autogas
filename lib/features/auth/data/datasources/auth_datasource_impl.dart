@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:autogas/config/config.dart';
 import 'package:autogas/features/auth/data/data.dart';
 import 'package:autogas/features/auth/domain/domain.dart';
+import 'package:autogas/features/shared/infrastructure/services/shared_preferences_storage_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:autogas/features/auth/domain/entities/auth_response.dart';
@@ -9,6 +10,8 @@ import 'package:autogas/features/shared/shared.dart';
 
 class AuthDataSourceImpl extends AuthDataSource {
   final dio = Dio(BaseOptions(baseUrl: Environment.apiUrl));
+
+  final sharePref = SharedPreferencesStorageService();
 
   Future<String> getDeviceName() async {
     final deviceInfo = DeviceInfoPlugin();
@@ -26,26 +29,30 @@ class AuthDataSourceImpl extends AuthDataSource {
   @override
   Future<Resource<String>> forgotPassword(String email) async {
     try {
-
       Map<String, String> headers = {'Content-Type': 'application/json'};
 
       final response = await dio.post(
         '/auth/forgot-password',
-        data: {'email': email },
+        data: {'email': email},
         options: Options(headers: headers),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
-        final authResponse = AuthResponseModel.fromJson(data);//Por analizar
+        final authResponse = AuthResponseModel.fromJson(data); //Por analizar
         print('Data Remote: ${authResponse.toJson()}');
-        return Success<String>(AuthResponseModel.resetPasswordMessage(response.data));
+        return Success<String>(
+          AuthResponseModel.resetPasswordMessage(response.data),
+        );
       } else {
         final data = response.data;
         return ErrorData<String>(MessageParser.parseMessage(data['message']));
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404) {
+      if (e.response?.statusCode == 401 ||
+          e.response?.statusCode == 401 ||
+          e.response?.statusCode == 403 ||
+          e.response?.statusCode == 404) {
         return ErrorData<String>(
           e.response?.data['message'] ?? 'Email no encontrado',
         );
@@ -56,7 +63,9 @@ class AuthDataSourceImpl extends AuthDataSource {
       if (e.type == DioExceptionType.receiveTimeout) {
         return ErrorData<String>('Tiempo de espera agotado');
       } else if (e.response != null && e.response?.statusCode == 500) {
-        return ErrorData<String>('Error del servidor: ${e.response?.data['message']}');
+        return ErrorData<String>(
+          'Error del servidor: ${e.response?.data['message']}',
+        );
       } else {
         return ErrorData<String>('Error inesperado: ${e.message}');
       }
@@ -66,9 +75,12 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<AuthResponse?> getUserSession() {
-    // TODO: implement getUserSession
-    throw UnimplementedError();
+  Future<AuthResponse?> getUserSession() async {
+    final data = await sharePref.read('user', fromJson: AuthResponseModel.fromJson);
+    if (data != null) {
+    return data.toEntity(); // Convierte el modelo en una entidad
+  }
+    return null;
   }
 
   @override
@@ -97,7 +109,10 @@ class AuthDataSourceImpl extends AuthDataSource {
         return ErrorData(MessageParser.parseMessage(data['message']));
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404) {
+      if (e.response?.statusCode == 401 ||
+          e.response?.statusCode == 401 ||
+          e.response?.statusCode == 403 ||
+          e.response?.statusCode == 404) {
         return ErrorData(
           e.response?.data['message'] ?? 'Credenciales incorrectas',
         );
@@ -146,10 +161,12 @@ class AuthDataSourceImpl extends AuthDataSource {
         return ErrorData(MessageParser.parseMessage(data['message']));
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 400 || e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404 || e.response?.statusCode == 409) {
-        return ErrorData(
-          e.response?.data['message'] ?? 'Datos incorrectos',
-        );
+      if (e.response?.statusCode == 400 ||
+          e.response?.statusCode == 401 ||
+          e.response?.statusCode == 403 ||
+          e.response?.statusCode == 404 ||
+          e.response?.statusCode == 409) {
+        return ErrorData(e.response?.data['message'] ?? 'Datos incorrectos');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
         return ErrorData('Revisar conexión a internet');
@@ -167,26 +184,8 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<void> saveUserSession(AuthResponse authResponse) {
-    // TODO: implement saveUserSession
-    throw UnimplementedError();
+  Future<void> saveUserSession(AuthResponse authResponse) async {
+    final authResponseModel = AuthResponseModel.fromEntity(authResponse);
+    sharePref.save('user', authResponseModel.toJson());
   }
-}
-
-@override
-Future<bool> logout() {
-  // TODO: implement logout
-  throw UnimplementedError();
-}
-
-@override
-Future<Resource<AuthResponse>> register(User user) {
-  // TODO: implement register
-  throw UnimplementedError();
-}
-
-@override
-Future<void> saveUserSession(AuthResponse authResponse) {
-  // TODO: implement saveUserSession
-  throw UnimplementedError();
 }

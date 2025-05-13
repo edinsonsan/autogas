@@ -1,12 +1,14 @@
 import 'package:autogas/features/auth/data/data.dart';
 import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:autogas/features/auth/domain/entities/auth_response.dart';
+import 'package:autogas/features/shared/infrastructure/services/shared_preferences_storage_service.dart';
 import 'package:autogas/features/shared/utils/resource.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource datasource;
+  final SharedPreferencesStorageService sharePref;
 
-  AuthRepositoryImpl({AuthDataSource? datasource})
+  AuthRepositoryImpl(this.sharePref, {AuthDataSource? datasource})
     : datasource = datasource ?? AuthDataSourceImpl();
 
   @override

@@ -1,4 +1,5 @@
 import 'package:autogas/features/auth/auth.dart';
+import 'package:autogas/features/auth/domain/entities/auth_response.dart';
 import 'package:autogas/features/auth/presentation/login/bloc/login_bloc.dart';
 import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter/material.dart';
@@ -38,9 +39,12 @@ class _LoginPageState extends State<LoginPage> {
           final response = state.response;
           if (response is ErrorData) {
             snackBar(context, response.message);
-          }else if (response is Success) {
+          } else if (response is Success) {
             snackBar(context, 'Login Exitoso');
-          // context.read<LoginBloc>().add(FormReset());
+            print('Success DATA LOGIN: ${response.data}');
+            final authResponse = response.data as AuthResponse;
+            context.read<LoginBloc>().add(SaveUserSession(authResponse: authResponse));
+            // context.read<LoginBloc>().add(FormReset());
           }
         },
         child: BlocBuilder<LoginBloc, LoginState>(
@@ -50,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
               obscurePassword: _obscurePassword,
               onToggleVisibility: _togglePasswordVisibility,
             );
-
 
             // if (state.formStatus == FormStatus.validating) {
             //   return Stack(
@@ -73,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
             //       ),
 
             //       // Animación del coche subiendo como un cohete
-                  
+
             //     ],
             //   );
             // }

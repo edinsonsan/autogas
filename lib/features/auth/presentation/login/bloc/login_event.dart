@@ -16,6 +16,16 @@ class PasswordChanged extends LoginEvent {
   const PasswordChanged(this.password);
 }
 
+class SaveUserSession extends LoginEvent {
+  final AuthResponse authResponse;
+  SaveUserSession({ required this.authResponse });
+}
+
+class UpdateNotificationToken extends LoginEvent {
+  final int id;
+  UpdateNotificationToken({required this.id});
+}
+
 class FormSubmit extends LoginEvent {}
 
 class ForceValidate extends LoginEvent {}

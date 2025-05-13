@@ -37,8 +37,6 @@ class UserModel {
     image: json["image"],
     password: json["password"],
     notificaionToken: json["notificaion_token"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
     roles: List<RoleModel>.from(
       json["roles"].map((x) => RoleModel.fromJson(x)),
     ),

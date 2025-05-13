@@ -1,4 +1,6 @@
 import 'package:autogas/core/usesCases/auth/auth_usescases.dart';
+import 'package:autogas/features/auth/data/data.dart';
+import 'package:autogas/features/auth/domain/entities/auth_response.dart';
 import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
 import 'package:autogas/features/shared/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,14 +15,36 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   AuthUsescases authUsesCases;
   // final formKey = GlobalKey<FormState>();
   LoginBloc(this.authUsesCases) : super(const LoginState()) {
-    // on<LoginInitEvent>((event, emit) {
-    //   emit(state.copyWith(formKey: formKey));
-    // });
+    on<LoginInitEvent>((event, emit) async {
+      final AuthResponse? response =
+          await authUsesCases.getUserSesion.run();
+      if (response != null) {
+        final authResponseModel = AuthResponseModel.fromEntity(response);
+      print(' Auth response Sesion:::: ${authResponseModel.toJson()}');
+      }
+      print(' Auth response Sesion:::: $response');
+      // emit(state.copyWith(formKey: formKey));
+    });
 
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<FormSubmit>(_onFormSubmit);
     on<ForceValidate>(_onForceValidate);
+    on<SaveUserSession>(_onSaveUserSession);
+  }
+
+  void _onSaveUserSession(
+    SaveUserSession event,
+    Emitter<LoginState> emit,
+  ) async {
+    await authUsesCases.saveUserSesion.run(event.authResponse);
+    // final response = await authUsesCases.saveUserSesion.run(event.authResponse);
+    // emit(
+    //   state.copyWith(
+    //     formStatus: FormStatus.success,
+    //     response: response,
+    //   ),
+    // );
   }
 
   void _onEmailChanged(EmailChanged event, Emitter<LoginState> emit) {
