@@ -1,6 +1,5 @@
-import 'package:autogas/features/shared/infrastructure/inputs/inputs.dart';
 import 'package:autogas/features/auth/presentation/forgot_password/bloc/forgot_bloc.dart';
-import 'package:autogas/features/shared/widgets/widgets.dart';
+import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -24,56 +23,99 @@ class ForgotPassword extends StatelessWidget {
   //   }
   // }
 
+  void snackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(errorMessage)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final ForgotBloc forgotBloc = context.watch<ForgotBloc>();
     final email = forgotBloc.state.email;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.pop();
-          },
-          child: const Icon(Icons.arrow_back_ios_new_outlined),
-        ),
-        backgroundColor: Colors.black,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 40),
-                  _buildTitle(),
-                  const SizedBox(height: 12.0),
-                  _buildSubtitle(),
-                  const SizedBox(height: 30),
+      child: BlocListener<ForgotBloc, ForgotState>(
+        listener: (context, state) {
+          final response = state.response;
+          // final formStatus = state.formStatus;
+          if (response is ErrorData) {
+            snackBar(context, response.message);
+          }else if (response is Success) {
+            snackBar(context, 'Correo Enviado !');
+          // context.read<LoginBloc>().add(FormReset());
+          }
+        },
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: const Icon(Icons.arrow_back_ios_new_outlined),
+          ),
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 40),
+                    _buildTitle(),
+                    const SizedBox(height: 12.0),
+                    _buildSubtitle(),
+                    const SizedBox(height: 30),
 
-                  _buildEmailForm(context, email),
+                    _buildEmailForm(context, email),
 
-                  const SizedBox(height: 40),
-                  context.select(
-                    (ForgotBloc forgotBloc) => Center(
-                      child: CustomFilledButton(
-                        text: "Enviar correo",
-
-                        onPressed: () {
-                          if (forgotBloc.state.isValid) {
-                            context.read<ForgotBloc>().add(FormSubmit());
-                          }
-                          context.read<ForgotBloc>().add(ForceValidate());
-                        },
-                        buttonColor: Colors.white,
-                        textColor: Colors.black,
-                        prefixIcon: const Icon(Icons.send, color: Colors.black),
+                    const SizedBox(height: 40),
+                    context.select(
+                      (ForgotBloc forgotBloc) => Center(
+                        child: CustomFilledButton(
+                          text: "Enviar correo",
+                          onPressed:
+                              (forgotBloc.state.formStatus ==
+                                      FormStatus.validating)
+                                  ? null
+                                  : () {
+                                    if (forgotBloc.state.isValid) {
+                                      context.read<ForgotBloc>().add(
+                                        FormSubmit(),
+                                      );
+                                    }
+                                    context.read<ForgotBloc>().add(
+                                      ForceValidate(),
+                                    );
+                                  },
+                          customChild:
+                              (forgotBloc.state.formStatus ==
+                                      FormStatus.validating)
+                                  ? SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).colorScheme.primary,
+                                      ),
+                                    ),
+                                  )
+                                  : null,
+                          buttonColor: Colors.white,
+                          textColor: Colors.black,
+                          prefixIcon: const Icon(
+                            Icons.send,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 40),
-                  _buildSignUpPrompt(context),
-                ],
+                    const SizedBox(height: 40),
+                    _buildSignUpPrompt(context),
+                  ],
+                ),
               ),
             ),
           ),

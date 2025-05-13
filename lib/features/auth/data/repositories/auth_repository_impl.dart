@@ -10,7 +10,7 @@ class AuthRepositoryImpl extends AuthRepository {
     : datasource = datasource ?? AuthDataSourceImpl();
 
   @override
-  Future<String> forgotPassword(String email) {
+  Future<Resource<String>> forgotPassword(String email) {
     return datasource.forgotPassword(email);
   }
 

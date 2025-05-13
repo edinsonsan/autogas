@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:autogas/config/config.dart';
 import 'package:autogas/features/auth/data/data.dart';
-import 'package:autogas/features/auth/data/models/auth_response_model.dart';
 import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -25,9 +24,45 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<String> forgotPassword(String email) {
-    // TODO: implement forgotPassword
-    throw UnimplementedError();
+  Future<Resource<String>> forgotPassword(String email) async {
+    try {
+
+      Map<String, String> headers = {'Content-Type': 'application/json'};
+
+      final response = await dio.post(
+        '/auth/forgot-password',
+        data: {'email': email },
+        options: Options(headers: headers),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+        final authResponse = AuthResponseModel.fromJson(data);//Por analizar
+        print('Data Remote: ${authResponse.toJson()}');
+        return Success<String>(AuthResponseModel.resetPasswordMessage(response.data));
+      } else {
+        final data = response.data;
+        return ErrorData<String>(MessageParser.parseMessage(data['message']));
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 401 || e.response?.statusCode == 403 || e.response?.statusCode == 404) {
+        return ErrorData<String>(
+          e.response?.data['message'] ?? 'Email no encontrado',
+        );
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return ErrorData<String>('Revisar conexión a internet');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        return ErrorData<String>('Tiempo de espera agotado');
+      } else if (e.response != null && e.response?.statusCode == 500) {
+        return ErrorData<String>('Error del servidor: ${e.response?.data['message']}');
+      } else {
+        return ErrorData<String>('Error inesperado: ${e.message}');
+      }
+    } catch (e) {
+      return ErrorData<String>('Error inesperado: ${e.toString()}');
+    }
   }
 
   @override

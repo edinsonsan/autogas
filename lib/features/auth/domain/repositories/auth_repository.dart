@@ -9,6 +9,6 @@ abstract class AuthRepository {
   Future<void> saveUserSession(AuthResponse authResponse);
   Future<AuthResponse?> getUserSession();
   Future<bool> logout();
-  Future<String> forgotPassword(String email);
+  Future<Resource<String>> forgotPassword(String email);
   // Future<User> checkAuthStatus(String token);
 }

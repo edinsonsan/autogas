@@ -31,6 +31,10 @@ class AuthResponseModel {
         user: UserModel.fromEntity(authResponse.user),
         token: authResponse.token,
       );
+
+  static String resetPasswordMessage(Map<String, dynamic> json) {
+    return json['message']; // Solo devuelve el mensaje
+  }
 }
 
 // Métodos helper si lo necesitas

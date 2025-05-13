@@ -15,6 +15,7 @@ abstract class AppModule {
   AuthUsescases get authUsescases => AuthUsescases(
         login: LoginUsescase(authRepository: authRepository),
         register: RegisterUsescase(authRepository: authRepository),
+        forgot: ForgotUsescase(authRepository: authRepository)
       );
 
 }

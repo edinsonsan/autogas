@@ -38,6 +38,9 @@ class _LoginPageState extends State<LoginPage> {
           final response = state.response;
           if (response is ErrorData) {
             snackBar(context, response.message);
+          }else if (response is Success) {
+            snackBar(context, 'Login Exitoso');
+          // context.read<LoginBloc>().add(FormReset());
           }
         },
         child: BlocBuilder<LoginBloc, LoginState>(
