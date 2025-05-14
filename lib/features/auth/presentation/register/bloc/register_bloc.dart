@@ -1,5 +1,7 @@
 import 'package:autogas/core/usesCases/auth/auth_usescases.dart';
+import 'package:autogas/features/auth/data/data.dart';
 import 'package:autogas/features/auth/domain/domain.dart';
+import 'package:autogas/features/auth/domain/entities/auth_response.dart';
 import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +13,22 @@ part 'register_state.dart';
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   AuthUsescases authUsescases;
   RegisterBloc(this.authUsescases) : super(const RegisterState()) {
+
+    on<RegisterInitEvent>((event, emit) async {
+      final AuthResponse? response = await authUsescases.getUserSesion.run();
+      if (response != null) {
+        final authResponseModel = AuthResponseModel.fromEntity(response);
+      //   print(' Auth response Sesion:::: ${authResponseModel.toJson()}');
+        emit(
+          state.copyWith(
+            response: Success(authResponseModel),
+          )
+        );
+      }
+      // print(' Auth response Sesion:::: $response');
+      // emit(state.copyWith(formKey: formKey));
+    });
+
     on<NameChanged>(_onNameChanged);
     on<LastnameChanged>(_onLastnameChanged);
     on<EmailChanged>(_onEmailChanged);
@@ -21,7 +39,14 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<FormSubmit>(_onFormSubmit);
     on<FormReset>(_onFormReset);
     on<ForceValidate>(_onForceValidate);
+
+    
+    on<SaveUserSession>(_onSaveUserSession);
   }
+
+  void _onSaveUserSession(SaveUserSession event, Emitter<RegisterState> emit) async {
+  await authUsescases.saveUserSesion.run(event.authResponse);
+}
 
   void _onNameChanged(NameChanged event, Emitter<RegisterState> emit) {
     final name = event.name;
@@ -142,59 +167,60 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   void _onFormSubmit(FormSubmit event, Emitter<RegisterState> emit) async {
-  // Marcamos los campos como "dirty" para que se actualice su validación
-  final name = Username.dirty(value: state.name.value);
-  final lastname = Username.dirty(value: state.lastname.value);
-  final email = Email.dirty(value: state.email.value);
-  final phone = Phone.dirty(value: state.phone.value);
-  final password = Password.dirty(value: state.password.value);
-  final confirmPassword = Confirmpassword.dirty(
-    value: state.confirmPassword.value,
-    password: state.password.value,
-  );
+    // Marcamos los campos como "dirty" para que se actualice su validación
+    final name = Username.dirty(value: state.name.value);
+    final lastname = Username.dirty(value: state.lastname.value);
+    final email = Email.dirty(value: state.email.value);
+    final phone = Phone.dirty(value: state.phone.value);
+    final password = Password.dirty(value: state.password.value);
+    final confirmPassword = Confirmpassword.dirty(
+      value: state.confirmPassword.value,
+      password: state.password.value,
+    );
 
-  // Validamos el formulario
-  final isValid = Formz.validate([
-    name,
-    lastname,
-    email,
-    phone,
-    password,
-    confirmPassword,
-  ]);
+    // Validamos el formulario
+    final isValid = Formz.validate([
+      name,
+      lastname,
+      email,
+      phone,
+      password,
+      confirmPassword,
+    ]);
 
-  // Emitimos el nuevo estado con campos "tocados" y validez
-  emit(
-    state.copyWith(
-      name: name,
-      lastname: lastname,
-      email: email,
-      phone: phone,
-      password: password,
-      confirmPassword: confirmPassword,
-      isValid: isValid,
-    ),
-  );
+    // Emitimos el nuevo estado con campos "tocados" y validez
+    emit(
+      state.copyWith(
+        name: name,
+        lastname: lastname,
+        email: email,
+        phone: phone,
+        password: password,
+        confirmPassword: confirmPassword,
+        isValid: isValid,
+      ),
+    );
 
-  // Si no es válido, no continuamos
-  if (!isValid) return;
+    // Si no es válido, no continuamos
+    if (!isValid) return;
 
-  // Indicamos que se está procesando
-  emit(state.copyWith(formStatus: FormStatus.validating, response: Loading()));
+    // Indicamos que se está procesando
+    emit(
+      state.copyWith(formStatus: FormStatus.validating, response: Loading()),
+    );
 
-  // Llamamos al caso de uso del registro (asegúrate de tenerlo en tus use cases)
-  final response = await authUsescases.register.run(state.toUser());
+    // Llamamos al caso de uso del registro (asegúrate de tenerlo en tus use cases)
+    final response = await authUsescases.register.run(state.toUser());
 
-  // Emitimos el resultado del registro
-  emit(
-    state.copyWith(
-      formStatus:
-          response is Success ? FormStatus.success : FormStatus.failure,
-      response: response,
-    ),
-  );
-}
-
+    // Emitimos el resultado del registro
+    emit(
+      state.copyWith(
+        formStatus:
+            response is Success ? FormStatus.success : FormStatus.failure,
+        response: response,
+      ),
+    );
+  }
 
   void _onFormReset(FormReset event, Emitter<RegisterState> emit) {
     emit(
@@ -242,3 +268,5 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
   }
 }
+
+

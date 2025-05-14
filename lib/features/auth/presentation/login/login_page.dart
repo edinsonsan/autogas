@@ -1,11 +1,14 @@
 import 'package:autogas/features/auth/auth.dart';
+import 'package:autogas/features/auth/data/data.dart';
 import 'package:autogas/features/auth/domain/entities/auth_response.dart';
 import 'package:autogas/features/auth/presentation/login/bloc/login_bloc.dart';
 import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
+  static const String name = 'login_page';
   const LoginPage({super.key});
 
   @override
@@ -42,9 +45,25 @@ class _LoginPageState extends State<LoginPage> {
           } else if (response is Success) {
             snackBar(context, 'Login Exitoso');
             print('Success DATA LOGIN: ${response.data}');
-            final authResponse = response.data as AuthResponse;
-            context.read<LoginBloc>().add(SaveUserSession(authResponse: authResponse));
-            // context.read<LoginBloc>().add(FormReset());
+
+            late final AuthResponse authResponse;
+
+            if (response.data is AuthResponseModel) {
+              authResponse = (response.data as AuthResponseModel).toEntity();
+            } else if (response.data is AuthResponse) {
+              authResponse = response.data as AuthResponse;
+            } else {
+              snackBar(context, 'Error: Unexpected data type');
+              print(
+                'Error: Expected AuthResponseModel or AuthResponse but got ${response.data.runtimeType}',
+              );
+              return;
+            }
+
+            context.read<LoginBloc>().add(
+              SaveUserSession(authResponse: authResponse),
+            );
+            context.go('/client/home');
           }
         },
         child: BlocBuilder<LoginBloc, LoginState>(

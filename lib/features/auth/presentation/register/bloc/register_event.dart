@@ -4,6 +4,8 @@ sealed class RegisterEvent {
   const RegisterEvent();
 }
 
+class RegisterInitEvent extends RegisterEvent {}
+
 class NameChanged extends RegisterEvent {
   final Username name;
   const NameChanged(this.name);
@@ -35,8 +37,8 @@ class ConfirmPasswordChanged extends RegisterEvent {
 }
 
 class SaveUserSession extends RegisterEvent {
-  // final AuthResponse authResponse;
-  // SaveUserSession({ required this.authResponse });
+  final AuthResponse authResponse;
+  SaveUserSession({ required this.authResponse });
 }
 
 class FormSubmit extends RegisterEvent {}

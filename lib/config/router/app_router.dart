@@ -1,4 +1,5 @@
 
+import 'package:autogas/features/client/presentation/page/home/client_home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:autogas/features/auth/auth.dart';
 
@@ -6,29 +7,31 @@ import 'package:autogas/features/auth/auth.dart';
 final appRouter = GoRouter(
   initialLocation: '/login',
   routes: [
+
+    //*AUTH
     GoRoute(
       path: '/login',
-      // name: HomeScreen.name,
+      name: LoginPage.name,
       builder: (context, state) => const LoginPage(),
     ),
 
     GoRoute(
       path: '/register',
-      // name: CounterScreeen.name,
+      name: RegisterPage.name,
       builder: (context, state) => const RegisterPage(),
     ),
 
     GoRoute(
       path: '/forgot-password',
-      // name: ButtonsScreen.name,
+      name: ForgotPassword.name,
       builder: (context, state) => const ForgotPassword(),
     ),
 
-    // GoRoute(
-    //   path: '/cards',
-    //   name: CardsScreen.name,
-    //   builder: (context, state) =>  const CardsScreen(),
-    // ),
+    GoRoute(
+      path: '/client/home',
+      name: ClientHomePage.name,
+      builder: (context, state) =>  const ClientHomePage(),
+    ),
 
     // GoRoute(
     //   path: '/progress',

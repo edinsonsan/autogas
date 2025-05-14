@@ -8,6 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 List<BlocProvider> blocProviders = [
   BlocProvider<LoginBloc>(create: (context) => LoginBloc(locator<AuthUsescases>())..add(LoginInitEvent())),
-  BlocProvider<RegisterBloc>(create: (context) => RegisterBloc(locator<AuthUsescases>())),
+  BlocProvider<RegisterBloc>(create: (context) => RegisterBloc(locator<AuthUsescases>())..add(RegisterInitEvent())),
   BlocProvider<ForgotBloc>(create: (context) => ForgotBloc(locator<AuthUsescases>()), child: const ForgotPassword(),)
 ];

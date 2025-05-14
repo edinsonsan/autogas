@@ -16,11 +16,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   // final formKey = GlobalKey<FormState>();
   LoginBloc(this.authUsesCases) : super(const LoginState()) {
     on<LoginInitEvent>((event, emit) async {
-      final AuthResponse? response =
-          await authUsesCases.getUserSesion.run();
+      final AuthResponse? response = await authUsesCases.getUserSesion.run();
       if (response != null) {
         final authResponseModel = AuthResponseModel.fromEntity(response);
-      print(' Auth response Sesion:::: ${authResponseModel.toJson()}');
+        print(' Auth response Sesion:::: ${authResponseModel.toJson()}');
+        emit(
+          state.copyWith(
+            response: Success(authResponseModel),
+          )
+        );
       }
       print(' Auth response Sesion:::: $response');
       // emit(state.copyWith(formKey: formKey));
