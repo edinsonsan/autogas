@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class SideMenu extends StatefulWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
-  const SideMenu({super.key, required this.scaffoldKey});
+  // final GlobalKey<ScaffoldState> scaffoldKey;
+  const SideMenu({
+    super.key, 
+    // required this.scaffoldKey
+    });
 
   @override
   State<SideMenu> createState() => _SideMenuState();
@@ -32,12 +35,28 @@ class _SideMenuState extends State<SideMenu> {
         });
         final menuItem = appMenuItems[value];
         context.push(menuItem.link);
-        widget.scaffoldKey.currentState?.closeEndDrawer();
+        // widget.scaffoldKey.currentState?.closeEndDrawer();
       },
       children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color.fromARGB(255, 12, 38, 145),
+                Color.fromARGB(255, 34, 156, 249),
+              ],
+            ),
+          ),
+          child: Text(
+            'Menu del cliente',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
         Padding(
           padding: EdgeInsets.fromLTRB(28, hasNotch ? 0 : 20, 16, 10),
-          child: Text('Menu Principal', style: textStyles.titleMedium),
+          // child: Text('Menu Principal', style: textStyles.titleMedium),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 16, 10),

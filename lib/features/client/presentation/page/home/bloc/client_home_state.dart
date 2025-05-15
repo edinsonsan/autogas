@@ -1,10 +1,18 @@
 part of 'client_home_bloc.dart';
 
-sealed class ClientHomeState extends Equatable {
-  const ClientHomeState();
+class ClientHomeState extends Equatable {
+  final int pageIndex;
+  const ClientHomeState({
+    this.pageIndex = 0
+  });
+
+  ClientHomeState copyWith({
+    int? pageIndex
+  }) {
+    return ClientHomeState(pageIndex: pageIndex ?? this.pageIndex);
+  }
   
   @override
-  List<Object> get props => [];
+  List<Object> get props => [pageIndex];
 }
 
-final class ClientHomeInitial extends ClientHomeState {}

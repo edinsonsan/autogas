@@ -76,10 +76,13 @@ class AuthDataSourceImpl extends AuthDataSource {
 
   @override
   Future<AuthResponse?> getUserSession() async {
-    final data = await sharePref.read('user', fromJson: AuthResponseModel.fromJson);
+    final data = await sharePref.read(
+      'user',
+      fromJson: AuthResponseModel.fromJson,
+    );
     if (data != null) {
-    return data.toEntity(); // Convierte el modelo en una entidad
-  }
+      return data.toEntity(); // Convierte el modelo en una entidad
+    }
     return null;
   }
 
@@ -133,9 +136,8 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<bool> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<bool> logout() async {
+    return await sharePref.remove('user');
   }
 
   @override

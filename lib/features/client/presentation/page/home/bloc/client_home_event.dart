@@ -1,8 +1,12 @@
 part of 'client_home_bloc.dart';
 
-sealed class ClientHomeEvent extends Equatable {
+sealed class ClientHomeEvent {
   const ClientHomeEvent();
-
-  @override
-  List<Object> get props => [];
 }
+
+class ChangeDrawerPage extends ClientHomeEvent {
+  final int pageIndex;
+  ChangeDrawerPage({ required this.pageIndex });
+}
+
+class Logout extends ClientHomeEvent {}

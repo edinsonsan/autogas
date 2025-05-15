@@ -22,7 +22,8 @@ abstract class AppModule {
         register: RegisterUsescase(authRepository: authRepository),
         forgot: ForgotUsescase(authRepository: authRepository),
         saveUserSesion: SaveUserSesionUsescase(authRepository),
-        getUserSesion: GetUserSesionUsescase(authRepository)
+        getUserSesion: GetUserSesionUsescase(authRepository),
+        logout: LogoutUsescase(authRepository),
       );
 
 }
