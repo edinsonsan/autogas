@@ -24,7 +24,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('AuTogas', style: TextStyle(color: colors.primary, fontSize: 20,), ),
+        title: Text('AuTogas 🚖', style: TextStyle(color: colors.primary, fontSize: 20,), ),
       ),
       body: BlocBuilder<ClientHomeBloc, ClientHomeState>(
         builder: (context, state) {

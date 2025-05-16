@@ -1,5 +1,4 @@
 import 'package:autogas/features/auth/domain/domain.dart';
-import 'package:autogas/features/auth/domain/usecases/logout_usescase.dart';
 
 class AuthUsescases {
   LoginUsescase login;

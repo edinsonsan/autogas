@@ -2,6 +2,7 @@ import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:autogas/features/client/presentation/page/home/bloc/client_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileInfoContent extends StatelessWidget {
   final User? user;
@@ -16,19 +17,16 @@ class ProfileInfoContent extends StatelessWidget {
           children: [
             _headerProfile(context),
             const Spacer(),
-            _actionProfile('EDITAR PERFIL', Icons.edit, () {
-              Navigator.pushNamed(context, 'profile/update', arguments: user);
+            _actionProfile( 'EDITAR PERFIL', Icons.edit, () {
+              context.push('/profile/update', extra: user);
+              // Navigator.pushNamed(context, 'profile/update', arguments: user);
             }),
-            _actionProfile('CERRAR SESIÓN', Icons.settings_power, () {
+            _actionProfile( 'CERRAR SESIÓN', Icons.settings_power, () {
               context.read<ClientHomeBloc>().add(Logout());
+              // Navega a la pantalla de login y elimina todas las rutas anteriores
+              context.go('/login');
               // context.read<DriverHomeBloc>().add(Logout());
               // context.read<BlocSocketIO>().add(DisconnectSocketIO());
-              // Navega a la pantalla de login y elimina todas las rutas anteriores
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                'login',
-                (route) => false,
-              );
             }),
             const SizedBox(height: 35),
           ],
@@ -72,15 +70,26 @@ class ProfileInfoContent extends StatelessWidget {
               '${user?.name} ${user?.lastname}',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            Text(user?.email ?? '..........', style: TextStyle(color: Colors.grey[700])),
-            Text(user?.phone ?? '..........', style: TextStyle(color: Colors.grey[700])),
+            Text(
+              user?.email ?? '..........',
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            Text(
+              user?.phone ?? '..........',
+              style: TextStyle(color: Colors.grey[700]),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _actionProfile(String option, IconData icon, Function() function) {
+  Widget _actionProfile(
+    // BuildContext context,
+    String option,
+    IconData icon,
+    Function() function,
+  ) {
     return GestureDetector(
       onTap: () {
         function();

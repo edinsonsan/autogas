@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
+  final String? initialValue;
   final String? label;
   final String? hint;
   final String? errorMessage;
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatelessWidget {
 
   const CustomTextFormField({
     super.key,
+    this.initialValue,
     this.label,
     this.hint,
     this.errorMessage,
@@ -34,7 +36,7 @@ class CustomTextFormField extends StatelessWidget {
     this.boxShadow,
     this.prefixIcon,
     this.suffixIcon,
-    this.controller
+    this.controller,
   });
 
   @override
@@ -54,8 +56,9 @@ class CustomTextFormField extends StatelessWidget {
         color: backgroundColor ?? colorScheme.surface,
         borderRadius: const BorderRadius.only(
           topLeft: borderRadius,
-          bottomLeft: borderRadius,
+          // bottomLeft: borderRadius,
           bottomRight: borderRadius,
+          // topRight: borderRadius,
         ),
         boxShadow: [
           BoxShadow(
@@ -67,6 +70,7 @@ class CustomTextFormField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        initialValue: initialValue,
         controller: controller,
         onChanged: onChanged,
         validator: validator,

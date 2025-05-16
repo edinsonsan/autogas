@@ -1,5 +1,7 @@
 
+import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:autogas/features/client/presentation/page/home/client_home_page.dart';
+import 'package:autogas/features/profile/update/profile_update_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:autogas/features/auth/auth.dart';
 
@@ -7,7 +9,6 @@ import 'package:autogas/features/auth/auth.dart';
 final appRouter = GoRouter(
   initialLocation: '/login',
   routes: [
-
     //*AUTH
     GoRoute(
       path: '/login',
@@ -26,54 +27,83 @@ final appRouter = GoRouter(
       name: ForgotPassword.name,
       builder: (context, state) => const ForgotPassword(),
     ),
-
+    
+    //* HOME
     GoRoute(
       path: '/client/home',
       name: ClientHomePage.name,
-      builder: (context, state) =>  const ClientHomePage(),
+      builder: (context, state) => const ClientHomePage(),
+    ),
+    // GoRoute(
+    //   path: '/driver/home',
+    //   name: DriverHomePage.name,
+    //   builder: (context, state) => const DriverHomePage(),
+    // ),
+
+    // //* ROLES
+    // GoRoute(
+    //   path: '/roles',
+    //   name: RolesPage.name,
+    //   builder: (context, state) => const RolesPage(),
+    // ),
+
+    // //* CLIENT MAP BOOKING INFO
+    // GoRoute(
+    //   path: '/client/map/booking',
+    //   name: ClientMapBookingInfoPage.name,
+    //   builder: (context, state) => const ClientMapBookingInfoPage(),
+    // ),
+
+    //* PROFILE UPDATE
+    GoRoute(
+      path: '/profile/update',
+      // name: ProfileUpdatePage.name,
+      builder: (context, state) {
+        final user = state.extra as User;  // Recibir el objeto User desde state.extra
+        return ProfileUpdatePage(user: user);
+      },
     ),
 
+    // //* CLIENT DRIVER OFFERS
     // GoRoute(
-    //   path: '/progress',
-    //   name: ProgressScreen.name,
-    //   builder: (context, state) =>  const ProgressScreen(),
+    //   path: '/client/driver/offers',
+    //   name: ClientDriverOffersPage.name,
+    //   builder: (context, state) => const ClientDriverOffersPage(),
     // ),
 
+    // //* CLIENT MAP TRIP
     // GoRoute(
-    //   path: '/snackbar',
-    //   name: SnackbarScreen.name,
-    //   builder: (context, state) =>  const SnackbarScreen(),
+    //   path: '/client/map/trip',
+    //   name: ClientMapTripPage.name,
+    //   builder: (context, state) => const ClientMapTripPage(),
     // ),
 
+    // //* DRIVER MAP TRIP
     // GoRoute(
-    //   path: '/animated',
-    //   name: AnimatedScreen.name,
-    //   builder: (context, state) =>  const AnimatedScreen(),
+    //   path: '/driver/map/trip',
+    //   name: DriverMapTripPage.name,
+    //   builder: (context, state) => const DriverMapTripPage(),
     // ),
 
+    // //* DRIVER RATING TRIP
     // GoRoute(
-    //   path: '/ui-controls',
-    //   name: UiControllsScreen.name,
-    //   builder: (context, state) =>  const UiControllsScreen(),
+    //   path: '/driver/rating/trip',
+    //   name: DriverRatingTripPage.name,
+    //   builder: (context, state) => const DriverRatingTripPage(),
     // ),
 
+    // //* DRIVER CLIENT REQUEST
     // GoRoute(
-    //   path: '/tutorial',
-    //   name: AppTutorialScreen.name,
-    //   builder: (context, state) =>  const AppTutorialScreen(),
+    //   path: '/driver/client/request',
+    //   name: DriverClientRequestsPage.name,
+    //   builder: (context, state) => const DriverClientRequestsPage(),
     // ),
 
+    // //* CLIENT RATING TRIP
     // GoRoute(
-    //   path: '/infinite',
-    //   name: InfiniteScrollScreen.name,
-    //   builder: (context, state) =>  const InfiniteScrollScreen(),
+    //   path: '/client/rating/trip',
+    //   name: ClientRatingTripPage.name,
+    //   builder: (context, state) => const ClientRatingTripPage(),
     // ),
-
-    // GoRoute(
-    //   path: '/theme-changer',
-    //   name: ThemeChangerScreen.name,
-    //   builder: (context, state) =>  const ThemeChangerScreen(),
-    // ),
-
   ],
 );

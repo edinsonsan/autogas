@@ -43,15 +43,16 @@ class _LoginPageState extends State<LoginPage> {
           if (response is ErrorData) {
             snackBar(context, response.message);
           } else if (response is Success) {
-            snackBar(context, 'Login Exitoso');
             print('Success DATA LOGIN: ${response.data}');
 
             late final AuthResponse authResponse;
 
             if (response.data is AuthResponseModel) {
               authResponse = (response.data as AuthResponseModel).toEntity();
+            snackBar(context, '¡Bienvenido: ${authResponse.user.name}!');
             } else if (response.data is AuthResponse) {
               authResponse = response.data as AuthResponse;
+            snackBar(context, '¡Bienvenido: ${authResponse.user.name}!');
             } else {
               snackBar(context, 'Error: Unexpected data type');
               print(
