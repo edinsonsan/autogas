@@ -1,6 +1,9 @@
 part of 'profile_update_bloc.dart';
-enum FormStatus { invalid, valid, validating, posting, success, failure, }
+
+enum FormStatus { invalid, valid, validating, posting, success, failure }
+
 class ProfileUpdateState extends Equatable {
+  final int id;
   final Username name;
   final Username lastname;
   final Phone phone;
@@ -11,22 +14,24 @@ class ProfileUpdateState extends Equatable {
   final Resource? response;
 
   const ProfileUpdateState({
+    this.id = 0,
     this.name = const Username.pure(),
     this.lastname = const Username.pure(),
     this.phone = const Phone.pure(),
     this.isValid = false,
     this.image,
     this.formStatus = FormStatus.invalid,
-    this.response
+    this.response,
   });
 
-  // toUser() => User(
-  //   name: name.value, 
-  //   lastname: lastname.value, 
-  //   phone: phone.value
-  // );
+  toUser() => User(
+    name: name.value,
+    lastname: lastname.value,
+    phone: phone.value
+  );
 
   ProfileUpdateState copyWith({
+    int? id,
     Username? name,
     Username? lastname,
     Phone? phone,
@@ -35,6 +40,7 @@ class ProfileUpdateState extends Equatable {
     FormStatus? formStatus,
     Resource? response,
   }) => ProfileUpdateState(
+    id: id ?? this.id,
     name: name ?? this.name,
     lastname: lastname ?? this.lastname,
     phone: phone ?? this.phone,
@@ -45,5 +51,14 @@ class ProfileUpdateState extends Equatable {
   );
 
   @override
-  List<Object?> get props => [name, lastname, phone, isValid, image, formStatus, response];
+  List<Object?> get props => [
+    id,
+    name,
+    lastname,
+    phone,
+    isValid,
+    image,
+    formStatus,
+    response,
+  ];
 }

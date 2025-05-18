@@ -1,5 +1,5 @@
 import 'package:autogas/features/auth/domain/domain.dart';
-import 'package:autogas/features/profile/update/bloc/profile_update_bloc.dart';
+import 'package:autogas/features/profile/presentation/update/bloc/profile_update_bloc.dart';
 import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,7 +147,6 @@ class ProfileUpdateContent extends StatelessWidget {
       if (state.isValid) {
         context.read<ProfileUpdateBloc>().add(FormSubmit());
       } else {
-        context.read<ProfileUpdateBloc>().add(FormSubmit());
         // Fuerzas validación de todos los campos (como "tocar" todos los campos)
         context.read<ProfileUpdateBloc>().add(ForceValidate());
       }

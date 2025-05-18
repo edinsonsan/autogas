@@ -1,7 +1,7 @@
 
 import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:autogas/features/client/presentation/page/home/client_home_page.dart';
-import 'package:autogas/features/profile/update/profile_update_page.dart';
+import 'package:autogas/features/profile/presentation/update/profile_update_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:autogas/features/auth/auth.dart';
 

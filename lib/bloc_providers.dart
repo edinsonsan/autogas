@@ -1,11 +1,12 @@
 import 'package:autogas/core/usesCases/auth/auth_usescases.dart';
+import 'package:autogas/core/usesCases/users/users_usecases.dart';
 import 'package:autogas/features/auth/auth.dart';
 import 'package:autogas/features/auth/presentation/forgot_password/bloc/forgot_bloc.dart';
 import 'package:autogas/features/auth/presentation/login/bloc/login_bloc.dart';
 import 'package:autogas/features/auth/presentation/register/bloc/register_bloc.dart';
 import 'package:autogas/features/client/presentation/page/home/bloc/client_home_bloc.dart';
-import 'package:autogas/features/profile/info/bloc/profile_info_bloc.dart';
-import 'package:autogas/features/profile/update/bloc/profile_update_bloc.dart';
+import 'package:autogas/features/profile/presentation/info/bloc/profile_info_bloc.dart';
+import 'package:autogas/features/profile/presentation/update/bloc/profile_update_bloc.dart';
 import 'package:autogas/injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,7 @@ List<BlocProvider> blocProviders = [
   BlocProvider<ForgotBloc>(create: (context) => ForgotBloc(locator<AuthUsescases>()), child: const ForgotPassword(),),
   BlocProvider<ClientHomeBloc>(create: (context) => ClientHomeBloc(locator<AuthUsescases>())),
   BlocProvider<ProfileInfoBloc>(create: (context) => ProfileInfoBloc(locator<AuthUsescases>())..add(GetUserInfo())),
-  BlocProvider<ProfileUpdateBloc>(create: (context) => ProfileUpdateBloc()),
+  BlocProvider<ProfileUpdateBloc>(create: (context) => ProfileUpdateBloc(locator<UsersUsecases>() , locator<AuthUsescases>())),
   // BlocProvider<ClientMapSeekerBloc>(create: (context) => ClientMapSeekerBloc(context.read<BlocSocketIO>(), locator<GeolocatorUseCases>(), locator<SocketUseCases>())),
   // BlocProvider<ClientMapBookingInfoBloc>(create: (context) => ClientMapBookingInfoBloc(context.read<BlocSocketIO>(), locator<GeolocatorUseCases>(), locator<ClientRequestsUseCases>(), locator<AuthUsescases>())),
   // BlocProvider<DriverClientRequestsBloc>(create: (context) => DriverClientRequestsBloc(context.read<BlocSocketIO>(), locator<ClientRequestsUseCases>(), locator<DriversPositionUseCases>(), locator<AuthUsescases>(), locator<DriverTripRequestUseCases>())),

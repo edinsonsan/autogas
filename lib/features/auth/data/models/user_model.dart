@@ -5,7 +5,7 @@ class UserModel {
   final int? id;
   final String name;
   final String lastname;
-  final String email;
+  final String? email;
   final String phone;
   final dynamic image;
   final String? password;
@@ -37,9 +37,9 @@ class UserModel {
     image: json["image"],
     password: json["password"],
     notificaionToken: json["notificaion_token"],
-    roles: List<RoleModel>.from(
+    roles: json["roles"] != null ? List<RoleModel>.from(
       json["roles"].map((x) => RoleModel.fromJson(x)),
-    ),
+    ): [],
   );
 
   Map<String, dynamic> toJson() => {

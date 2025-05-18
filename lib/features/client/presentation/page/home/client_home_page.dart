@@ -1,6 +1,6 @@
 import 'package:autogas/features/client/presentation/page/home/app_drawer.dart';
 import 'package:autogas/features/client/presentation/page/home/bloc/client_home_bloc.dart';
-import 'package:autogas/features/profile/info/profile_info_page.dart';
+import 'package:autogas/features/profile/presentation/info/profile_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
