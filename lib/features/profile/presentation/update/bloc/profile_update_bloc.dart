@@ -137,7 +137,7 @@ Future<void> _onTakePhoto(TakePhoto event, Emitter<ProfileUpdateState> emit) asy
     final phone = Phone.dirty(value: state.phone.value);
 
     // Validamos el formulario
-    final isValid = Formz.validate([name, lastname, phone]);
+    final isValid = Formz.validate([name, lastname, phone,]);
 
     // Emitimos el nuevo estado con campos "tocados" y validez
     emit(
@@ -157,11 +157,11 @@ Future<void> _onTakePhoto(TakePhoto event, Emitter<ProfileUpdateState> emit) asy
       state.copyWith(formStatus: FormStatus.validating, response: Loading()),
     );
 
-    // Llamamos al caso de uso del registro (asegúrate de tenerlo en tus use cases)
+    // Llamamos al caso de uso del registro
     final response = await usersUsecases.update.run(
       state.id,
       state.toUser(),
-      null,
+      state.image,
     );
 
     // Emitimos el resultado del registro

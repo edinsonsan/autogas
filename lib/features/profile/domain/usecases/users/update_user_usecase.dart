@@ -9,6 +9,6 @@ class UpdateUserUseCase {
 
   UpdateUserUseCase({required this.usersRepository});
 
-  run(int id, User user, File? file) => usersRepository.update(id, user, file);
+  run(int id, User user, File? file) => usersRepository.update(id, user, file: file);
 
 }

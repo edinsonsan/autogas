@@ -9,11 +9,14 @@ import 'package:autogas/features/shared/utils/resource.dart';
 class UsersRepositoryImpl extends UsersRepository {
   Future<String> toke;
   final UsersDatasource datasource;
-  UsersRepositoryImpl( {required this.toke, UsersDatasource? datasource})
+  UsersRepositoryImpl({required this.toke, UsersDatasource? datasource})
     : datasource = datasource ?? UsersDatasourceImpl(toke);
   @override
-  Future<Resource<User>> update(int id, User user, File? file) {
-    return datasource.update(id, user, file);
+  Future<Resource<User>> update(int id, User user, {File? file}) {
+    if(file == null){
+      return datasource.update(id, user);
+    }
+    return datasource.updateImage(id, user, file);
   }
 
   @override
@@ -22,5 +25,10 @@ class UsersRepositoryImpl extends UsersRepository {
     String notificationToken,
   ) {
     return datasource.updateNotificationToken(id, notificationToken);
+  }
+
+  @override
+  Future<Resource<User>> updateImage(int id, User user, File file) {
+    return datasource.updateImage(id, user, file);
   }
 }

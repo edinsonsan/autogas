@@ -62,15 +62,18 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         },
         child: BlocBuilder<ProfileUpdateBloc, ProfileUpdateState>(
           builder: (context, state) {
-            if (state.formStatus == FormStatus.validating) {
-              return Stack(
-                children: [
-                  ProfileUpdateContent(user: user, profileUpdateState: state),
-                  const Center(child: CircularProgressIndicator()),
-                ],
-              );
-            }
-            return ProfileUpdateContent(user: user, profileUpdateState: state);
+            return Stack(
+              children: [
+                ProfileUpdateContent(user: user, profileUpdateState: state),
+                if (state.formStatus == FormStatus.validating)
+                  Container(
+                    color: Colors.black.withOpacity(
+                      0.3,
+                    ), // Fondo oscuro semi-transparente
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+              ],
+            );
           },
         ),
       ),
