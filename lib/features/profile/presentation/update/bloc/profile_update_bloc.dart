@@ -8,6 +8,7 @@ import 'package:autogas/features/shared/shared.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'profile_update_event.dart';
 part 'profile_update_state.dart';
@@ -22,6 +23,9 @@ class ProfileUpdateBloc extends Bloc<ProfileUpdateEvent, ProfileUpdateState> {
     on<NameChanged>(_onNameChanged);
     on<LastNameChanged>(_onLastnameChanged);
     on<PhoneChanged>(_onPhoneChanged);
+
+    on<PickImage>(_onPickImage);
+    on<TakePhoto>(_onTakePhoto);
 
     on<FormSubmit>(_onFormSubmit);
     // on<FormReset>(_onFormReset);
@@ -78,6 +82,32 @@ class ProfileUpdateBloc extends Bloc<ProfileUpdateEvent, ProfileUpdateState> {
       ),
     );
   }
+
+  //Metodos 
+final ImagePicker _picker = ImagePicker(); // Puede ir como propiedad del bloc
+
+Future<void> _pickImage({
+  required ImageSource source,
+  required Emitter<ProfileUpdateState> emit,
+}) async {
+  try {
+    final XFile? image = await _picker.pickImage(source: source);
+    if (image != null) {
+      emit(state.copyWith(image: File(image.path)));
+    }
+  } catch (e) {
+    // Puedes emitir un estado de error si lo deseas
+    print('Error al seleccionar imagen: $e');
+  }
+}
+//Metodos mejorados
+Future<void> _onPickImage(PickImage event, Emitter<ProfileUpdateState> emit) async {
+  await _pickImage(source: ImageSource.gallery, emit: emit);
+}
+
+Future<void> _onTakePhoto(TakePhoto event, Emitter<ProfileUpdateState> emit) async {
+  await _pickImage(source: ImageSource.camera, emit: emit);
+}
 
   void _onUpdateUserSession(
     UpdateUserSession event,

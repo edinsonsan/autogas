@@ -1,13 +1,18 @@
 import 'package:autogas/features/auth/domain/domain.dart';
 import 'package:autogas/features/profile/presentation/update/bloc/profile_update_bloc.dart';
 import 'package:autogas/features/shared/shared.dart';
+import 'package:autogas/features/shared/utils/gallery_or_photo_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileUpdateContent extends StatelessWidget {
   final User? user;
   final ProfileUpdateState profileUpdateState;
-  const ProfileUpdateContent({super.key, this.user, required this.profileUpdateState});
+  const ProfileUpdateContent({
+    super.key,
+    this.user,
+    required this.profileUpdateState,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,7 @@ class ProfileUpdateContent extends StatelessWidget {
               ],
             ),
             _cardUserInfo(context),
-            const DefaultIconBack(margin: EdgeInsets.only(top: 60, left: 30))
+            const DefaultIconBack(margin: EdgeInsets.only(top: 60, left: 30)),
           ],
         ),
       ),
@@ -36,10 +41,11 @@ class ProfileUpdateContent extends StatelessWidget {
   Widget _imageUser(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // GalleryOrPhotoDialog(
-        //     context,
-        //     () => {context.read<ProfileUpdateBloc>().add(PickImage())},
-        //     () => {context.read<ProfileUpdateBloc>().add(TakePhoto())});
+        showGalleryOrPhotoDialog(
+          context,
+          () => context.read<ProfileUpdateBloc>().add(PickImage()),
+          () => context.read<ProfileUpdateBloc>().add(TakePhoto()),
+        );
       },
       child: Container(
         width: 115,
@@ -47,19 +53,17 @@ class ProfileUpdateContent extends StatelessWidget {
         child: AspectRatio(
           aspectRatio: 1,
           child: ClipOval(
-            child: profileUpdateState.image != null
-                ? Image.file(
-                    profileUpdateState.image!,
-                    fit: BoxFit.cover,
-                  )
-                : user != null
+            child:
+                profileUpdateState.image != null
+                    ? Image.file(profileUpdateState.image!, fit: BoxFit.cover)
+                    : user != null
                     ? user!.image != null
                         ? FadeInImage.assetNetwork(
-                            placeholder: 'assets/images/user_image.png',
-                            image: user!.image!,
-                            fit: BoxFit.cover,
-                            fadeInDuration: const Duration(seconds: 1),
-                          )
+                          placeholder: 'assets/images/user_image.png',
+                          image: user!.image!,
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(seconds: 1),
+                        )
                         : Image.asset('assets/images/user_image.png')
                     : Image.asset('assets/images/user_image.png'),
           ),
@@ -94,7 +98,9 @@ class ProfileUpdateContent extends StatelessWidget {
                 // backgroundColor: Colors.grey[200]!,
                 initialValue: user?.name,
                 onChanged: (text) {
-                  context.read<ProfileUpdateBloc>().add(NameChanged(name: Username.dirty(value: text)));
+                  context.read<ProfileUpdateBloc>().add(
+                    NameChanged(name: Username.dirty(value: text)),
+                  );
                 },
                 errorMessage: profileUpdateState.name.errorMessage,
               ),
@@ -110,7 +116,9 @@ class ProfileUpdateContent extends StatelessWidget {
                 // backgroundColor: Colors.grey[200]!,
                 initialValue: user?.lastname,
                 onChanged: (text) {
-                  context.read<ProfileUpdateBloc>().add(LastNameChanged(lastname: Username.dirty(value: text)));
+                  context.read<ProfileUpdateBloc>().add(
+                    LastNameChanged(lastname: Username.dirty(value: text)),
+                  );
                 },
                 errorMessage: profileUpdateState.lastname.errorMessage,
               ),
@@ -126,7 +134,9 @@ class ProfileUpdateContent extends StatelessWidget {
                 // backgroundColor: Colors.grey[200]!,
                 initialValue: user?.phone,
                 onChanged: (text) {
-                  context.read<ProfileUpdateBloc>().add(PhoneChanged(phone: Phone.dirty(value: text)));
+                  context.read<ProfileUpdateBloc>().add(
+                    PhoneChanged(phone: Phone.dirty(value: text)),
+                  );
                 },
                 errorMessage: profileUpdateState.phone.errorMessage,
               ),
@@ -143,14 +153,14 @@ class ProfileUpdateContent extends StatelessWidget {
     return GestureDetector(
       // onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       onTap: () {
-      final state = context.read<ProfileUpdateBloc>().state;
-      if (state.isValid) {
-        context.read<ProfileUpdateBloc>().add(FormSubmit());
-      } else {
-        // Fuerzas validación de todos los campos (como "tocar" todos los campos)
-        context.read<ProfileUpdateBloc>().add(ForceValidate());
-      }
-    },
+        final state = context.read<ProfileUpdateBloc>().state;
+        if (state.isValid) {
+          context.read<ProfileUpdateBloc>().add(FormSubmit());
+        } else {
+          // Fuerzas validación de todos los campos (como "tocar" todos los campos)
+          context.read<ProfileUpdateBloc>().add(ForceValidate());
+        }
+      },
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 15),
         child: ListTile(
@@ -171,10 +181,7 @@ class ProfileUpdateContent extends StatelessWidget {
               ),
               borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-            ),
+            child: Icon(icon, color: Colors.white),
           ),
         ),
       ),
@@ -243,12 +250,11 @@ class ProfileUpdateContent extends StatelessWidget {
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
+
         // validator: validator,
-        
         errorMessage: errorMessage,
         onChanged: onChanged,
       ),
     );
   }
-
 }
